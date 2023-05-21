@@ -12,5 +12,5 @@ type Template struct {
 }
 
 func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.EngineTemplate.ExecuteTemplate(w, "login", nil)
+	return t.EngineTemplate.ExecuteTemplate(w, name, nil)
 }
