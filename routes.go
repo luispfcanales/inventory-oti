@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/luispfcanales/inventory-oti/controller"
+	"github.com/luispfcanales/inventory-oti/middle"
 	"github.com/luispfcanales/inventory-oti/models"
 )
 
@@ -24,6 +25,7 @@ func RegisterRoutesController(e *echo.Echo) {
 	e.Renderer = t
 
 	e.GET("/", controller.Login)
+	e.GET("/app", middle.CheckCookie(controller.App))
 }
 
 // CreateApiRoutes create new routes to /api/anyroutes
