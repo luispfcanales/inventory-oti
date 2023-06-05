@@ -4,6 +4,7 @@ import (
 	"html/template"
 
 	"github.com/labstack/echo/v4"
+	"github.com/luispfcanales/inventory-oti/api"
 	"github.com/luispfcanales/inventory-oti/controller"
 	"github.com/luispfcanales/inventory-oti/middle"
 	"github.com/luispfcanales/inventory-oti/models"
@@ -46,8 +47,7 @@ func RegisterRoutesController(e *echo.Echo) {
 
 // CreateApiRoutes create new routes to /api/anyroutes
 func CreateApiRoutes(e *echo.Echo) {
-	a := e.Group("api")
-	a.GET("/user", func(c echo.Context) error {
-		return c.String(200, "welcome")
-	})
+	a := e.Group("/api")
+	a.GET("", api.Documentation)
+	a.POST("/login", api.Login(AUTH_SRV))
 }
