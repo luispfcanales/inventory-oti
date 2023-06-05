@@ -7,7 +7,22 @@ import (
 	"github.com/luispfcanales/inventory-oti/controller"
 	"github.com/luispfcanales/inventory-oti/middle"
 	"github.com/luispfcanales/inventory-oti/models"
+	"github.com/luispfcanales/inventory-oti/ports"
+	"github.com/luispfcanales/inventory-oti/services"
+	"github.com/luispfcanales/inventory-oti/storage/mem"
 )
+
+// any service implement ports
+var (
+	REPOSITORY ports.StorageService
+	AUTH_SRV   ports.AuthService
+)
+
+// initialized all services
+func init() {
+	REPOSITORY = mem.NewStorage()
+	AUTH_SRV = services.NewAuth(REPOSITORY)
+}
 
 // ConfigRoutes setting routes to api and controllers routes
 func ConfigRoutes(e *echo.Echo) {
@@ -24,7 +39,8 @@ func RegisterRoutesController(e *echo.Echo) {
 	}
 	e.Renderer = t
 
-	e.GET("/", controller.Login)
+	e.GET("/", controller.Login(AUTH_SRV))
+	e.POST("/login", controller.Login(AUTH_SRV))
 	e.GET("/app", middle.CheckCookie(controller.App))
 }
 
