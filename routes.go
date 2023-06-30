@@ -27,7 +27,7 @@ func init() {
 
 // ConfigRoutes setting routes to api and controllers routes
 func ConfigRoutes(e *echo.Echo) {
-	e.Static("/static", "assets")
+	e.Static("/public", "public")
 
 	RegisterRoutesController(e)
 	CreateApiRoutes(e)
@@ -40,8 +40,11 @@ func RegisterRoutesController(e *echo.Echo) {
 	}
 	e.Renderer = t
 
+	//render application form login
 	e.GET("/", controller.Login(AUTH_SRV))
-	e.POST("/login", controller.Login(AUTH_SRV))
+
+	//authentication application render view
+	e.POST("/", controller.Login(AUTH_SRV))
 	e.GET("/app", middle.CheckCookie(controller.App))
 }
 
