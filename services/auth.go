@@ -11,8 +11,8 @@ import (
 	"github.com/luispfcanales/inventory-oti/ports"
 )
 
-// keytoken is the secret key that signs the token
-var keytoken = []byte("luiskey")
+// Keytoken is the secret key that signs the token
+var Keytoken = []byte("luiskey")
 
 type JWTCustomClaims struct {
 	IDUSER string
@@ -20,11 +20,11 @@ type JWTCustomClaims struct {
 }
 
 type auth struct {
-	repo ports.StorageService
+	repo ports.StorageUserService
 }
 
 // NewAuth return instance of auth service
-func NewAuth(r ports.StorageService) *auth {
+func NewAuth(r ports.StorageUserService) *auth {
 	return &auth{
 		repo: r,
 	}
@@ -62,7 +62,7 @@ func (a *auth) ValidateTokenCookie(token string) bool {
 func (a *auth) parseToken(tokenString string) error {
 
 	t, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return keytoken, nil
+		return Keytoken, nil
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
@@ -88,7 +88,7 @@ func (a *auth) GenerateToken(id string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString(keytoken)
+	t, err := token.SignedString(Keytoken)
 	if err != nil {
 		return "", err
 	}

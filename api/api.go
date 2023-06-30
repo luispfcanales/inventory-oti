@@ -7,7 +7,7 @@ import (
 )
 
 func Documentation(c echo.Context) error {
-	return c.String(200, "welcome")
+	return c.String(200, "welcome to documentation api ")
 }
 
 func Login(authSrv ports.AuthService) echo.HandlerFunc {

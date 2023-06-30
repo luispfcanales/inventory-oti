@@ -4,6 +4,7 @@ import (
 	"html/template"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/luispfcanales/inventory-oti/api"
 	"github.com/luispfcanales/inventory-oti/controller"
 	"github.com/luispfcanales/inventory-oti/middle"
@@ -15,14 +16,22 @@ import (
 
 // any service implement ports
 var (
-	REPOSITORY ports.StorageService
-	AUTH_SRV   ports.AuthService
+	REPOSITORY_USER ports.StorageUserService
+	REPOSITORY_CPU  ports.StorageComputerService
+
+	AUTH_SRV ports.AuthService
+	CPU_SRV  ports.ComputerService
 )
 
 // initialized all services
 func init() {
-	REPOSITORY = clouddeta.NewCloudDetaStorage("e0ytsyfs3et_F3KZDz938AnuKc62WXBdzjt1WnKrNHh8")
-	AUTH_SRV = services.NewAuth(REPOSITORY)
+	REPOSITORY := clouddeta.NewCloudDetaStorage("e0ytsyfs3et_F3KZDz938AnuKc62WXBdzjt1WnKrNHh8")
+
+	REPOSITORY_USER = REPOSITORY
+	REPOSITORY_CPU = REPOSITORY
+
+	AUTH_SRV = services.NewAuth(REPOSITORY_USER)
+	CPU_SRV = services.NewComputer(REPOSITORY_CPU)
 }
 
 // ConfigRoutes setting routes to api and controllers routes
@@ -51,6 +60,13 @@ func RegisterRoutesController(e *echo.Echo) {
 // CreateApiRoutes create new routes to /api/anyroutes
 func CreateApiRoutes(e *echo.Echo) {
 	a := e.Group("/api")
+	a.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+
 	a.GET("", api.Documentation)
 	a.POST("/login", api.Login(AUTH_SRV))
+
+	a.GET("/computers", middle.CheckHeaderToken(api.GetComputers(CPU_SRV)))
 }

@@ -18,3 +18,17 @@ func CheckCookie(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func CheckHeaderToken(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		tokenString := c.Request().Header.Get("Authorization")
+		if tokenString == "" {
+			tokenString = c.QueryParam("token")
+		}
+
+		if tokenString == "" {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid token")
+		}
+		return next(c)
+	}
+}

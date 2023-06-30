@@ -25,6 +25,20 @@ func NewCloudDetaStorage(key string) *detaCloud {
 	return cloud
 }
 
+func (s *detaCloud) GetComputers() []*models.CPU {
+	var result []*models.CPU
+
+	db, err := base.New(s.client, "equipos")
+	s.logError("failed init base instance", err)
+
+	_, err = db.Fetch(&base.FetchInput{
+		Dest: &result,
+	})
+	s.logError("failed to fetch items", err)
+
+	return result
+}
+
 func (s *detaCloud) GetUserWithCredentials(email, pwd string) (models.User, error) {
 	var result *[]models.User
 
