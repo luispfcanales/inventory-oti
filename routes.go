@@ -10,7 +10,7 @@ import (
 	"github.com/luispfcanales/inventory-oti/models"
 	"github.com/luispfcanales/inventory-oti/ports"
 	"github.com/luispfcanales/inventory-oti/services"
-	"github.com/luispfcanales/inventory-oti/storage/mem"
+	"github.com/luispfcanales/inventory-oti/storage/clouddeta"
 )
 
 // any service implement ports
@@ -21,7 +21,7 @@ var (
 
 // initialized all services
 func init() {
-	REPOSITORY = mem.NewStorage()
+	REPOSITORY = clouddeta.NewCloudDetaStorage("e0ytsyfs3et_F3KZDz938AnuKc62WXBdzjt1WnKrNHh8")
 	AUTH_SRV = services.NewAuth(REPOSITORY)
 }
 

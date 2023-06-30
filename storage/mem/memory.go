@@ -23,8 +23,8 @@ func NewStorage() *storageActor {
 
 	id := uuid.New()
 	s.List["luispfcanales@gmail.com"] = &models.User{
-		ID:       id.String(),
-		Username: "luispfcanales@gmail.com",
+		Key:      id.String(),
+		Fullname: "luispfcanales@gmail.com",
 		Password: "luisangel",
 	}
 	go s.start()

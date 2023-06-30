@@ -39,11 +39,11 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 		return models.User{}, userNotFound
 	}
 
-	if u.ID == "" {
+	if u.Key == "" {
 		return models.User{}, userNotFound
 	}
 
-	t, err := a.GenerateToken(u.ID)
+	t, err := a.GenerateToken(u.Key)
 	if err != nil {
 		return models.User{}, err
 	}

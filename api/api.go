@@ -29,12 +29,12 @@ func Login(authSrv ports.AuthService) echo.HandlerFunc {
 			return res.NotFoundJSON()
 		}
 
-		if u.ID == "" {
+		if u.Key == "" {
 			return res.NotFoundJSON()
 		}
 
 		return res.SendJSON(&models.UserResponse{
-			ID:          u.ID,
+			ID:          u.Key,
 			AccessToken: u.AccessToken,
 		})
 	}
