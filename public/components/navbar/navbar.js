@@ -123,9 +123,7 @@ function createLinks(names){
         `#/${createPathRoute(names[i])}`,
       )
     )
-    console.log(names[i])
   }
-  console.log(links)
   return links
 }
 //custom links
