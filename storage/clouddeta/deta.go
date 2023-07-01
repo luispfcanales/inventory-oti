@@ -24,6 +24,11 @@ func NewCloudDetaStorage(key string) *detaCloud {
 
 	return cloud
 }
+func (s *detaCloud) logError(text string, err error) {
+	if err != nil {
+		log.Fatalf("STORAGE: %s -> %v :", text, err)
+	}
+}
 
 func (s *detaCloud) GetComputers() []*models.CPU {
 	var result []*models.CPU
@@ -39,6 +44,7 @@ func (s *detaCloud) GetComputers() []*models.CPU {
 	return result
 }
 
+// implement StorageUserService
 func (s *detaCloud) GetUserWithCredentials(email, pwd string) (models.User, error) {
 	var result *[]models.User
 
@@ -67,8 +73,7 @@ func (s *detaCloud) GetUserWithCredentials(email, pwd string) (models.User, erro
 	return models.User{}, nil
 }
 
-func (s *detaCloud) logError(text string, err error) {
-	if err != nil {
-		log.Fatalf("STORAGE: %s -> %v :", text, err)
-	}
-}
+//func (s *detaCloud) GetUsers() []*models.User {
+//	var result []*models.User
+//	return result
+//}
