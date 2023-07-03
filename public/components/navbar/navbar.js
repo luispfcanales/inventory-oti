@@ -107,9 +107,9 @@ function CustomButton(imgButton){
   return btn
 }
 
-function createPathRoute(nameRoute){
+function createPathRouteAdmin(nameRoute){
   let pathRoute = nameRoute.split(" ").join("-")
-  return pathRoute
+  return `#/admin/${pathRoute}`
 }
 
 function createLinks(names){
@@ -120,7 +120,7 @@ function createLinks(names){
         "menu-item-2",
         "hover:bg-gray-300 text-gray-700 block px-4 py-2 text-sm",
         names[i],
-        `#/${createPathRoute(names[i])}`,
+        createPathRouteAdmin(names[i]),
       )
     )
   }
@@ -151,7 +151,7 @@ export function NavBody(){
 
   const customLink = document.createElement("a")
   customLink.className = "hover:text-gray-700 text-gray-500 flex items-center text-sm menu"
-  customLink.href = `#/${createPathRoute("Equipos informaticos")}`
+  customLink.href = createPathRouteAdmin("Equipos informaticos")
   customLink.innerHTML = `${SvgComputer()}Equipos informaticos`
   let menuCPU = div(
     "inline-block text-left",

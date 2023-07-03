@@ -3,3 +3,7 @@
     --new-button: #794c8f;
     --hover-new-button: #673680;
 }
+#rootID{
+  margin:0;
+  padding:0;
+}
