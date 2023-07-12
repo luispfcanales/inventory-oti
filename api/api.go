@@ -36,6 +36,7 @@ func Login(authSrv ports.AuthService) echo.HandlerFunc {
 		return res.SendJSON(&models.UserResponse{
 			ID:          u.Key,
 			AccessToken: u.AccessToken,
+			Username:    u.Fullname,
 		})
 	}
 }

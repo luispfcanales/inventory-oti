@@ -49,12 +49,13 @@ func RegisterRoutesController(e *echo.Echo) {
 	}
 	e.Renderer = t
 
-	//render application form login
-	e.GET("/", controller.Login(AUTH_SRV))
+	//route
+	e.GET("/", controller.Index)
 
 	//authentication application render view
-	e.POST("/", controller.Login(AUTH_SRV))
-	e.GET("/app", middle.CheckCookie(controller.App))
+	e.POST("/login", controller.Login(AUTH_SRV))
+	e.GET("/login", middle.CheckCookie(AUTH_SRV, controller.Login(AUTH_SRV)))
+	e.GET("/application", middle.CheckCookie(AUTH_SRV, controller.ApplicationRender()))
 }
 
 // CreateApiRoutes create new routes to /api/anyroutes
@@ -67,6 +68,7 @@ func CreateApiRoutes(e *echo.Echo) {
 
 	a.GET("", api.Documentation)
 	a.POST("/login", api.Login(AUTH_SRV))
+	a.GET("/user/:id", middle.CheckHeaderToken(api.GetUserInfoByID(AUTH_SRV)))
 
 	a.GET("/computers", middle.CheckHeaderToken(api.GetComputers(CPU_SRV)))
 }

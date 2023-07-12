@@ -1,6 +1,10 @@
-export default function (text,styleClass,itemChilds) {
+export default function (idNameUser,text,styleClass,itemChilds) {
   const divContent = document.createElement("span")
   divContent.className = styleClass
+
+  if(idNameUser !== "") {
+    divContent.id=idNameUser
+  }
 
   if(text !== "") {
     divContent.innerText = text

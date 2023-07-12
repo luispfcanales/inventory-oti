@@ -1,18 +1,8 @@
 (function(){
 
-  const currentUrl = new URL(window.location.href)
-  let domain = currentUrl.hostname
-  let beforeDomain = "https://"
-
   const loadDataComputer=async()=>{
 
-
-    if(domain === "localhost"){
-      domain = domain +":3000"
-      beforeDomain = "http://"
-    }
-
-    const url = `${beforeDomain}${domain}/api/computers?token=123412341234`
+    const url = `${URL_API}/computers?token=123412341234`
     const data = await fetch(url).then((response)=> response.json()).then(data => {return data.data})
 
     $("#body_table_computer").html(

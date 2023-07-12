@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	Key      string `json:"key,omitempty"`
-	Fullname string `json:"username,omitempty"`
+	Fullname string `json:"fullname,omitempty"`
 	Password string `json:"password,omitempty"`
 	State    string `json:"state,omitempty"`
 	IDRole   string `json:"id_role,omitempty"`
@@ -20,4 +20,5 @@ type UserRequest struct {
 type UserResponse struct {
 	ID          string `json:"id,omitempty"`
 	AccessToken string `json:"access_token,omitempty"`
+	Username    string `json:"username,omitempty"`
 }

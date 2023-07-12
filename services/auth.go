@@ -15,7 +15,8 @@ import (
 var Keytoken = []byte("luiskey")
 
 type JWTCustomClaims struct {
-	IDUSER string
+	IDUSER   string
+	Fullname string
 	jwt.RegisteredClaims
 }
 
@@ -43,7 +44,7 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 		return models.User{}, userNotFound
 	}
 
-	t, err := a.GenerateToken(u.Key)
+	t, err := a.GenerateToken(u.Key, u.Fullname)
 	if err != nil {
 		return models.User{}, err
 	}
@@ -79,9 +80,10 @@ func (a *auth) parseToken(tokenString string) error {
 	return echo.ErrUnauthorized
 }
 
-func (a *auth) GenerateToken(id string) (string, error) {
+func (a *auth) GenerateToken(id string, fullname string) (string, error) {
 	claims := &JWTCustomClaims{
 		id,
+		fullname,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
 		},

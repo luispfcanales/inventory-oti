@@ -10,8 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
-  <body class="h-screen flex items-center justify-center bg-rose-100">
-  <form method="post" class="bg-white py-5 px-8 border-t-4 border-rose-600 rounded-md shadow-lg" id="frmAcceso" action="/">
+  <body class="relative h-screen flex items-center justify-center bg-rose-100">
+  <form id="sendValue" method="post" class="bg-white py-5 px-8 border-t-4 border-rose-600 rounded-md shadow-lg" action="/login">
     <h2 class="text-3xl text-gray-400 mb-3">Login</h2>
     <div class="mb-2">
       <label class="text-sm">Usuario</label>
@@ -25,7 +25,19 @@
       Ingresar
     </button>
   </form>
+  <div id="loader" class="hidden absolute w-full bg-gray-800 bg-opacity-50 h-screen flex justify-center items-center">
+    <div class="loader bg-white p-5 rounded-full flex space-x-3">
+      <div class="w-5 h-5 bg-gray-800 rounded-full animate-bounce"></div>
+      <div class="w-5 h-5 bg-gray-800 rounded-full animate-bounce"></div>
+      <div class="w-5 h-5 bg-gray-800 rounded-full animate-bounce"></div>
+    </div>
+  </div>
 
+    <script>
+      sendValue.addEventListener('submit',()=>{
+        document.querySelector("#loader").classList.toggle('hidden')
+      })
+    </script>
   </body>
 </html> 
 {{ end }}

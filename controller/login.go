@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/luispfcanales/inventory-oti/ports"
@@ -15,17 +16,7 @@ func Login(AuthSrv ports.AuthService) echo.HandlerFunc {
 
 		switch method {
 		case http.MethodGet:
-			cook, err := c.Cookie("auth-key")
-			if err != nil {
-				log.Println(err)
-				return c.Render(http.StatusOK, "login", nil)
-			}
-
-			if !AuthSrv.ValidateTokenCookie(cook.Value) {
-				return c.Render(http.StatusOK, "login", nil)
-			}
-
-			return c.Render(http.StatusOK, "app", nil)
+			return c.Redirect(http.StatusFound, "/application")
 
 		case http.MethodPost: //auth user
 			username := c.FormValue("username")
@@ -38,16 +29,24 @@ func Login(AuthSrv ports.AuthService) echo.HandlerFunc {
 			}
 			//send by cookie access token
 			cookie := new(http.Cookie)
-			cookie.Name = "auth-key"
+			cookie.Name = "Authorization"
 			cookie.Value = u.AccessToken
+			cookie.Expires = time.Now().Add(30 * time.Minute)
 			c.SetCookie(cookie)
-			return c.Render(http.StatusOK, "app", nil)
+			return c.Redirect(http.StatusFound, "/application")
 		}
 
 		return nil
 	}
 }
 
-func App(c echo.Context) error {
-	return c.String(200, "application")
+func ApplicationRender() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return c.Render(http.StatusOK, "app", nil)
+	}
+}
+
+// Index return page wellcome application
+func Index(c echo.Context) error {
+	return c.Render(http.StatusOK, "index", nil)
 }

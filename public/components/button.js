@@ -1,6 +1,10 @@
-export default function (text,styleClass,itemChilds,svgImage) {
+export default function (idEvent,text,styleClass,itemChilds,svgImage) {
   const item = document.createElement("button")
   item.className = styleClass
+
+  if(idEvent !== undefined ){
+    item.id = idEvent
+  }
 
   if(text !== "" ) {
     item.innerText = text

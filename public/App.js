@@ -4,7 +4,7 @@ import pageAdmin from './views/admin/admin.js'
 import pageAdminComputers from './views/admin/computers/computers.js'
 
 //scripts
-import { AppendScriptAdmin } from './scripts/scripts.js'
+import { AppendScriptAdmin,AppendScript } from './scripts/scripts.js'
 
 export function App(){
   //const $rootID = document.getElementById("rootID");
@@ -19,12 +19,15 @@ export function App(){
     case "#/":
       window.location = "#/admin";break;
     case "#/admin":
-      $rootID.appendChild(pageAdmin());break;
+      $rootID.appendChild(pageAdmin());
+      AppendScript("session")
+      break;
     case "#/admin/equipos-informaticos":
       $rootID.appendChild(pageAdminComputers())
+      AppendScript("session")
       AppendScriptAdmin("modal_computers")
       AppendScriptAdmin("table_computers")
-      ;break;
+      break;
     default:
       $rootID.appendChild(pageNotFound());break;
   }

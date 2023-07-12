@@ -5,16 +5,19 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/luispfcanales/inventory-oti/ports"
 )
 
-func CheckCookie(next echo.HandlerFunc) echo.HandlerFunc {
+func CheckCookie(AuthSrv ports.AuthService, next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		_, err := c.Cookie("auth-key")
+		cook, err := c.Cookie("Authorization")
 		if err != nil {
-			log.Println(err)
-			return c.Redirect(http.StatusFound, "/")
+			log.Println(" no pass =>", err)
+			return c.Render(200, "login", nil)
 		}
-		//more validation of the cookie
+		if !AuthSrv.ValidateTokenCookie(cook.Value) {
+			return c.Render(200, "login", nil)
+		}
 		return next(c)
 	}
 }

@@ -18,3 +18,7 @@ type AuthService interface {
 type ComputerService interface {
 	ListComputers() []*models.CPU
 }
+
+type UserService interface {
+	GetUserByID(id string) (models.User, error)
+}
