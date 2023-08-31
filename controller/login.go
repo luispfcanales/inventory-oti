@@ -1,52 +1,58 @@
 package controller
 
 import (
+	"fmt"
 	"log"
-	"net/http"
-	"time"
 
-	"github.com/labstack/echo/v4"
+	"github.com/gofiber/fiber/v2"
 	"github.com/luispfcanales/inventory-oti/ports"
+	"github.com/luispfcanales/inventory-oti/services"
 )
 
-// Login function validate credentials of user and redirect request
-func Login(AuthSrv ports.AuthService) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		method := c.Request().Method
+// PageLogin function validate credentials of user and redirect request
+func PageLogin(c *fiber.Ctx) error {
+	return c.Render("page_login", nil)
+}
 
-		switch method {
-		case http.MethodGet:
-			return c.Redirect(http.StatusFound, "/application")
+// LoginPost authenticate if exist user and create session
+func LoginPost(AuthSrv ports.AuthService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		username := c.FormValue("username")
+		password := c.FormValue("password")
 
-		case http.MethodPost: //auth user
-			username := c.FormValue("username")
-			password := c.FormValue("password")
-
-			u, err := AuthSrv.AuthUser(username, password)
-			if err != nil {
-				log.Println(err)
-				return c.Render(http.StatusOK, "login", nil)
-			}
-			//send by cookie access token
-			cookie := new(http.Cookie)
-			cookie.Name = "Authorization"
-			cookie.Value = u.AccessToken
-			cookie.Expires = time.Now().Add(30 * time.Minute)
-			c.SetCookie(cookie)
-			return c.Redirect(http.StatusFound, "/application")
+		u, err := AuthSrv.AuthUser(username, password)
+		if err != nil {
+			log.Println("Error login Controller: ", err)
+			return c.Render("page_login", nil)
 		}
 
-		return nil
+		isess := services.GetInstanceSession(c)
+		isess.Set(services.KEY_SESSION_USERNAME, fmt.Sprintf("%s %s", u.FirstName, u.LastName))
+
+		if err := isess.Save(); err != nil {
+			log.Println(err)
+			return c.SendString("internal server error")
+		}
+
+		return c.Redirect("/admin", fiber.StatusSeeOther)
 	}
 }
 
-func ApplicationRender() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		return c.Render(http.StatusOK, "app", nil)
+// LoginExit destroy session and redirect to /login
+func LoginExit(c *fiber.Ctx) error {
+	isess := services.GetInstanceSession(c)
+	name := isess.Get(services.KEY_SESSION_USERNAME)
+
+	isess.Delete(services.KEY_SESSION_USERNAME)
+	if err := isess.Destroy(); err != nil {
+		panic(err)
 	}
+
+	log.Println(fmt.Sprintf("Exit user -> %v", name))
+	return c.Redirect("/login", fiber.StatusSeeOther)
 }
 
 // Index return page wellcome application
-func Index(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", nil)
+func Index(c *fiber.Ctx) error {
+	return c.Render("index", nil)
 }

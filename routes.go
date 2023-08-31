@@ -1,10 +1,11 @@
 package main
 
 import (
-	"html/template"
+	"log"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/websocket/v2"
 	"github.com/luispfcanales/inventory-oti/api"
 	"github.com/luispfcanales/inventory-oti/controller"
 	"github.com/luispfcanales/inventory-oti/middle"
@@ -19,8 +20,12 @@ var (
 	REPOSITORY_USER ports.StorageUserService
 	REPOSITORY_CPU  ports.StorageComputerService
 
-	AUTH_SRV ports.AuthService
-	CPU_SRV  ports.ComputerService
+	AUTH_SRV    ports.AuthService
+	CPU_SRV     ports.ComputerService
+	USER_SRV    ports.UserService
+	API_DNI_SRV ports.ApiService
+
+	STREAMING_SRV ports.StramingComputerService
 )
 
 // initialized all services
@@ -32,43 +37,116 @@ func init() {
 
 	AUTH_SRV = services.NewAuth(REPOSITORY_USER)
 	CPU_SRV = services.NewComputer(REPOSITORY_CPU)
+	USER_SRV = services.NewUser(REPOSITORY_USER)
+
+	API_DNI_SRV = services.NewApiDni()
+
+	STREAMING_SRV = services.NewConnectionWSmanager()
 }
 
 // ConfigRoutes setting routes to api and controllers routes
-func ConfigRoutes(e *echo.Echo) {
-	e.Static("/public", "public")
+func ConfigRoutes(app *fiber.App) {
+	app.Static("/public", "public")
 
-	RegisterRoutesController(e)
-	CreateApiRoutes(e)
+	RegisterRoutesController(app)
+	CreateWebsockets(app)
+	CreateApiRoutes(app)
 }
 
 // RegisterRoutesController set the routes
-func RegisterRoutesController(e *echo.Echo) {
-	t := &models.Template{
-		EngineTemplate: template.Must(template.ParseGlob("views/*.html")),
-	}
-	e.Renderer = t
+func RegisterRoutesController(app *fiber.App) {
+	//create session storage
+	services.CreateStoreSession()
 
-	//route
-	e.GET("/", controller.Index)
+	app.Use(middle.NoCacheMiddleware)
+
+	//routing application
+	app.Get("/", controller.Index)
 
 	//authentication application render view
-	e.POST("/login", controller.Login(AUTH_SRV))
-	e.GET("/login", middle.CheckCookie(AUTH_SRV, controller.Login(AUTH_SRV)))
-	e.GET("/application", middle.CheckCookie(AUTH_SRV, controller.ApplicationRender()))
+	app.Get("/login", middle.RedirectAppIsValidSession(controller.PageLogin))
+	app.Post("/login", controller.LoginPost(AUTH_SRV))
+	app.Get("/exit", controller.LoginExit)
+
+	//session value
+	app.Get("/session/:id", controller.SessionValue)
+	//app.Get("/test", controller.PageAdminUserSystem)
+	app.Get("/test", controller.PageAdminOnlineComputers)
+
+	//pages administrator
+	admin := app.Group("/admin")
+	admin.Use(middle.CheckSession())
+	admin.Get("", controller.PageAdmin)
+	admin.Get("/computers/online", nil)
+	admin.Get("/computers/registered", controller.PageAdminRegisteredComputers)
+	admin.Get("/users-system", controller.PageAdminUserSystem)
+
+	//render page not found if not exist url only use by group /admin
+	admin.Use(func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusNotFound).SendFile("./views/404.html")
+	})
 }
 
 // CreateApiRoutes create new routes to /api/anyroutes
-func CreateApiRoutes(e *echo.Echo) {
-	a := e.Group("/api")
-	a.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+func CreateApiRoutes(app *fiber.App) {
+	rest := app.Group("/api")
+	rest.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
-	a.GET("", api.Documentation)
-	a.POST("/login", api.Login(AUTH_SRV))
-	a.GET("/user/:id", middle.CheckHeaderToken(api.GetUserInfoByID(AUTH_SRV)))
+	//a.Get("", api.Documentation)
+	//a.Post("/login", api.Login(AUTH_SRV))
+	//a.GET("/user/:id", middle.CheckHeaderToken(api.GetUserInfoByID(AUTH_SRV)))
 
-	a.GET("/computers", middle.CheckHeaderToken(api.GetComputers(CPU_SRV)))
+	usersApi := rest.Group("/users")
+	usersApi.Get("", api.GetAllUsers(USER_SRV))
+	usersApi.Post("", api.CreateUser(USER_SRV))
+	usersApi.Put("", api.UpdateUser(USER_SRV))
+
+	rest.Get("/computers", api.GetComputers(CPU_SRV))
+	rest.Get("/dni/:dni<int>?", api.GetDataDni(API_DNI_SRV))
+}
+
+// Create Websockets to realtime application
+func CreateWebsockets(app *fiber.App) {
+	streamWS := app.Group("/stream")
+
+	streamWS.Get("", api.GetAllConnectionStream(STREAMING_SRV))
+	streamWS.Get("/:role/computer/:id", websocket.New(func(c *websocket.Conn) {
+		id := c.Params("id")
+		role := c.Params("role")
+		defer func() {
+			STREAMING_SRV.Receiver(func() {
+				STREAMING_SRV.RemoveConnection(id, role)
+			})
+		}()
+
+		STREAMING_SRV.Receiver(func() {
+			STREAMING_SRV.AddConnection(id, role, c)
+		})
+
+		for {
+			Command := &models.StreamEvent{}
+
+			err := c.ReadJSON(Command)
+			if err == websocket.ErrBadHandshake {
+				log.Println("error de :", err.Error())
+				break
+			}
+			if err == websocket.ErrCloseSent {
+				log.Println("error de closesent:", err.Error())
+				break
+			}
+			if err != nil {
+				log.Println(err)
+				break
+			}
+			log.Println("loaded command: ", Command)
+
+			STREAMING_SRV.Receiver(func() {
+				STREAMING_SRV.Broadcast(Command)
+			})
+		}
+	}))
 }

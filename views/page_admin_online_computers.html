@@ -1,0 +1,18 @@
+{{ define "page_admin_online_computers" }}
+<!DOCTYPE html>
+<html>
+  <head>
+    {{ template "partial-header" "administrador"}}
+    <link href="/public/style.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    {{ template "partial-admin-navbar" . }}
+
+    {{ template "section-admin-online-computer" }}
+    <script src="/public/scripts/sessions.js"></script>
+    <script src="/public/scripts/admin/modal_online_computers.js"></script>
+    <script src="/public/scripts/admin/socket_online_computers.js"></script>
+  </body>
+</html>
+{{ end }}

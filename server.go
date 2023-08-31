@@ -1,17 +1,18 @@
 package main
 
 import (
+	"log"
 	"os"
 
-	"github.com/labstack/echo/v4"
+	"github.com/gofiber/fiber/v2"
 )
 
 type server struct {
-	engine *echo.Echo
+	engine *fiber.App
 }
 
 // NewServer return instance server with engine
-func NewServer(e *echo.Echo) *server {
+func NewServer(e *fiber.App) *server {
 	return &server{
 		engine: e,
 	}
@@ -19,8 +20,9 @@ func NewServer(e *echo.Echo) *server {
 
 // Run method up server
 func (s *server) Run() error {
+	log.SetFlags(log.Lshortfile | log.Ldate)
 	ConfigRoutes(s.engine)
-	return s.engine.Start(s.getPort())
+	return s.engine.Listen(s.getPort())
 }
 
 func (s *server) getPort() string {

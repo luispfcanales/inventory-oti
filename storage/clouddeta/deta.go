@@ -1,6 +1,7 @@
 package clouddeta
 
 import (
+	"errors"
 	"log"
 
 	"github.com/deta/deta-go/deta"
@@ -15,7 +16,7 @@ type detaCloud struct {
 func NewCloudDetaStorage(key string) *detaCloud {
 	d, err := deta.New(deta.WithProjectKey(key))
 	if err != nil {
-		log.Fatal("aqui", err)
+		log.Fatal("Error Storage -> detaspace: ", err)
 	}
 
 	cloud := &detaCloud{
@@ -45,6 +46,34 @@ func (s *detaCloud) GetComputers() []*models.CPU {
 }
 
 // implement StorageUserService
+func (s *detaCloud) existsEmail(email string) bool {
+	var result []models.User
+	db, err := base.New(s.client, "usuario")
+	s.logError("failed init base instance", err)
+
+	query := base.Query{
+		{
+			"email": email,
+		},
+	}
+	_, err = db.Fetch(&base.FetchInput{
+		Q:    query,
+		Dest: &result,
+	})
+	s.logError("failed to fetch items", err)
+	log.Println("exist email: ", result)
+	log.Println("exist email: ", len(result))
+
+	if len(result) > 0 {
+		for _, value := range result {
+			log.Println(value)
+			return true
+		}
+	}
+
+	return false
+}
+
 func (s *detaCloud) GetUserWithCredentials(email, pwd string) (models.User, error) {
 	var result *[]models.User
 
@@ -53,8 +82,8 @@ func (s *detaCloud) GetUserWithCredentials(email, pwd string) (models.User, erro
 
 	query := base.Query{
 		{
-			"Email":    email,
-			"Password": pwd,
+			"email":    email,
+			"password": pwd,
 		},
 	}
 
@@ -72,8 +101,37 @@ func (s *detaCloud) GetUserWithCredentials(email, pwd string) (models.User, erro
 
 	return models.User{}, nil
 }
+func (s *detaCloud) InsertUser(u models.User) error {
+	db, err := base.New(s.client, "usuario")
+	s.logError("failed init base instance", err)
 
-//func (s *detaCloud) GetUsers() []*models.User {
-//	var result []*models.User
-//	return result
-//}
+	log.Println(u)
+
+	if ok := s.existsEmail(u.Email); ok {
+		return errors.New("Email ya registrado")
+	}
+
+	key, err := db.Insert(u)
+	if err != nil {
+		s.logError("failed to insert item", err)
+		return err
+	}
+	log.Println(key)
+
+	return nil
+}
+
+// implement UserService interface
+func (s *detaCloud) GetUsers() ([]models.User, error) {
+	var result []models.User
+
+	db, err := base.New(s.client, "usuario")
+	s.logError("failed init base instance", err)
+
+	_, err = db.Fetch(&base.FetchInput{
+		Dest: &result,
+	})
+	s.logError("failed to fetch items", err)
+
+	return result, nil
+}

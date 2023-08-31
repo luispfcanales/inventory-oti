@@ -1,0 +1,15 @@
+{{ define "page_admin_index" }}
+<!DOCTYPE html>
+<html>
+  <head>
+    {{ template "partial-header" "administrador"}}
+    <link href="/public/style.css" rel="stylesheet"/>
+  </head>
+  <body>
+    {{ template "partial-admin-navbar" . }}
+
+    <h1>{{ . }}</h1>
+    <script src="/public/scripts/sessions.js"></script>
+  </body>
+</html>
+{{ end }}

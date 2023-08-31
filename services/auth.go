@@ -2,11 +2,12 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/labstack/echo/v4"
 	"github.com/luispfcanales/inventory-oti/models"
 	"github.com/luispfcanales/inventory-oti/ports"
 )
@@ -36,7 +37,7 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 	u, err := a.repo.GetUserWithCredentials(username, password)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Error Service Auth:", err)
 		return models.User{}, userNotFound
 	}
 
@@ -44,7 +45,7 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 		return models.User{}, userNotFound
 	}
 
-	t, err := a.GenerateToken(u.Key, u.Fullname)
+	t, err := a.GenerateToken(u.Key, fmt.Sprintf("%s %s", u.FirstName, u.LastName))
 	if err != nil {
 		return models.User{}, err
 	}
@@ -55,7 +56,7 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 func (a *auth) ValidateTokenCookie(token string) bool {
 	err := a.parseToken(token)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error Service Auth -> fn validate token:", err)
 		return false
 	}
 	return true
@@ -77,7 +78,7 @@ func (a *auth) parseToken(tokenString string) error {
 		return nil
 	}
 
-	return echo.ErrUnauthorized
+	return fiber.ErrUnauthorized
 }
 
 func (a *auth) GenerateToken(id string, fullname string) (string, error) {

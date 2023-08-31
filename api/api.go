@@ -1,22 +1,24 @@
 package api
 
 import (
-	"github.com/labstack/echo/v4"
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/luispfcanales/inventory-oti/models"
 	"github.com/luispfcanales/inventory-oti/ports"
 )
 
-func Documentation(c echo.Context) error {
-	return c.String(200, "welcome to documentation api ")
+func Documentation(c *fiber.Ctx) error {
+	return c.SendString("hola")
 }
 
-func Login(authSrv ports.AuthService) echo.HandlerFunc {
+func Login(authSrv ports.AuthService) fiber.Handler {
 
-	return func(c echo.Context) error {
+	return func(c *fiber.Ctx) error {
 		res := models.NewResponseApi(c)
 
 		user := &models.UserRequest{}
-		if err := c.Bind(user); err != nil {
+		if err := c.BodyParser(user); err != nil {
 			return res.BadRequestJSON()
 		}
 
@@ -36,7 +38,7 @@ func Login(authSrv ports.AuthService) echo.HandlerFunc {
 		return res.SendJSON(&models.UserResponse{
 			ID:          u.Key,
 			AccessToken: u.AccessToken,
-			Username:    u.Fullname,
+			Username:    fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		})
 	}
 }

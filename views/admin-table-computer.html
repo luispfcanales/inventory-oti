@@ -1,0 +1,48 @@
+{{ define "admin-table-computer"}}
+<div class="px-4 overflow-y-auto bg-white">
+  <div class="flex justify-between mb-4">
+    <span class="text-lg font-medium text-gray-700">Equipos Informaticos</span>
+    <button 
+      id="open_modal_computers"
+      class="bg-[var(--new-button)] py-2 px-4 text-white rounded-md hover:bg-[var(--hover-new-button)]"
+      data-modal-target="container_modal_computers"
+      data-modal-toggle="container_modal_computers"
+    >
+      +&nbsp;Nuevo
+    </button>
+  </div>
+  <div class="flex w-full">
+    <table class="w-full text-left overflow-x-auto pb-5">
+      <thead class="bg-gray-100">
+        <tr class="text-gray-500 text-sm">
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">Key</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">arquitectura</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">disco</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">fabricante</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">modelo</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">nombre equipo</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">procesador</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">ram</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">serial</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">tamano disco</th>
+          <th class="px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">opciones</th>
+        </tr>
+      </thead>
+      <tbody id="body_table_computer">
+        <tr class="hover:bg-gray-100">
+          <td class="border-b">0e1smfpvlrfs</td>
+          <td class="border-b">x64-based PC</td>
+          <td class="border-b">SSD</td>
+          <td class="border-b">Gigabyte Technology Co.</td>
+          <td class="border-b">To be filled by O.E.M.</td>
+          <td class="border-b">DESKTOP-AMOQJD6</td>
+          <td class="border-b">Intel(R) Core(TM) i5-3330 CPU @ 3.00GHz</td>
+          <td class="border-b">4</td>
+          <td class="border-b">To be filled by O.E.M.</td>
+          <td class="border-b">111.8 GB</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{{ end }}
