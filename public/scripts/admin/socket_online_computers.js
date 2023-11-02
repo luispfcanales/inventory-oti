@@ -1,9 +1,9 @@
 let socket = new WebSocket(`${STREAM_COMPUTERS}/3gr3df`)
 let hashmap = new Map()
 
-const EVENT_NOTIFY = "notify"
-const EVENT_LOADED = "loaded-info"
-const EVENT_LOAD_INFO = "load-info-system"
+const EVENT_NOTIFY = 1//"notify"
+const EVENT_LOAD_INFO = 2//"load-info-system"
+const EVENT_LOADED = 3//"loaded-info"
 
 const loadOnlineDesktops = async() => {
   const url = `${STREAM_URL}`
@@ -21,9 +21,12 @@ const loadOnlineDesktops = async() => {
 
 function renderValues() {
   let info = []
+  let nro = 0
   hashmap.forEach(function(value){
+    nro = nro + 1;
     info = [...info,`
         <tr class="hover:bg-gray-100">
+          <td class="text-center border-b">${nro}</td>
           <td class="text-center border-b">${value.id}</td>
           <td class="text-center border-b">${value.status}</td>
           <td class="text-center px-3 text-center border-b">
@@ -55,37 +58,37 @@ function renderValues() {
 loadOnlineDesktops()
 
 const LoadModalWithID =(PID)=>{
-  const data = { id: PID, status: "online", event:"load-info-system" , role:"admin", event_emisor_id:"3gr3df" };
+  const data = { id: PID, status: "online", event:EVENT_LOAD_INFO , role:"admin", event_emisor_id:"3gr3df" };
   const json = JSON.stringify(data);
   socket.send(json)
   //document.querySelector("#container_modal_online_computers").classList.toggle('hidden')
 }
-const receiverEvents=()=>{
+function processNotifyEvent(obj){
   switch(obj.status){
+    case "online":
+      hashmap.set(obj.id,obj)
+      break
+    case "offline":
+      hashmap.delete(obj.id)
+      break
+  }
+  renderValues()
+}
+
+const processEvent =(obj)=>{
+  switch(obj.event){
     case EVENT_LOADED:
-      //hashmap.set(obj.id,obj)
-      //renderValues()
+      console.log(obj)
       break
     case EVENT_NOTIFY:
-      hashmap.delete(obj.id)
-      renderValues()
+      processNotifyEvent(obj)
       break
   }
 }
 
 socket.addEventListener("message",(e)=>{
   let obj = JSON.parse(e.data)
-  switch(obj.status){
-    case "online":
-      hashmap.set(obj.id,obj)
-      renderValues()
-      break
-    case "offline":
-      hashmap.delete(obj.id)
-      renderValues()
-      break
-  }
-  console.log(obj)
+  processEvent(obj)
 })
 
 

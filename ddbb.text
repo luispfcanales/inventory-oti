@@ -1,0 +1,63 @@
+// roles and privilegies
+Table role {
+  id integer [primary key]
+  name text
+  active bool
+  created_at timestamp
+  update_at timestamp
+}
+Table staff {
+  id integer [primary key]
+  name varchar
+  active bool
+  created_at timestamp
+  update_at timestamp
+}
+Table person {
+  id integer [primary key]//dni
+  email text
+  first_name text
+  last_name text
+  birthdate date
+  address text
+  created_at timestamp
+  update_at timestamp
+}
+
+Table user {
+  id integer [primary key]
+  username varchar
+  password text
+  active bool
+  id_person integer
+  id_role integer
+  id_staff integer
+  created_at timestamp
+  update_at timestamp
+}
+Ref: user.id > person.id
+Ref: user.id > staff.id
+Ref: user.id > role.id 
+
+//tikets
+Table ticket{
+  id text [primary key]
+  description text
+  created_by_id_user integer
+  received_by_id_user integer
+  created_at timestamp
+}
+Ref: ticket.created_by_id_user > user.id
+
+
+//atencion hojas de servicio
+Table Document {
+  id text [primary key]//uuid
+  is_signed bool
+  url_path text
+  created_by_id_user integer
+  received_by_id_user integer
+  created_at timestamp
+  update_at timestamp
+}
+Ref: Document.created_by_id_user > user.id

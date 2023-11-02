@@ -20,17 +20,16 @@ type ConnectionManager struct {
 	mailBox      chan func()
 }
 
-var (
+const (
 	WS_ADMIN_ROLE   string = "admin"
 	WS_DESKTOP_ROLE string = "desktop"
 )
 
-var (
-	EVENT_DESKTOP_NOTIFICATION string = "notify"
-	EVENT_DESKTOP_LOADED       string = "loaded-info"
-)
-var (
-	EVENT_ADMIN_LOADINFO string = "load-info-system"
+// events system
+const (
+	EVENT_DESKTOP_NOTIFICATION uint8 = 1 + iota // "notify"
+	EVENT_ADMIN_LOADINFO                        // "load-info-system"
+	EVENT_DESKTOP_LOADED                        // "loaded-info"
 )
 
 func NewConnectionWSmanager() ports.StramingComputerService {
@@ -80,7 +79,7 @@ func (cm *ConnectionManager) RemoveConnection(id, role string) {
 		cm.Broadcast(&models.StreamEvent{
 			ID:     id,
 			Status: "offline",
-			Event:  "notify",
+			Event:  EVENT_DESKTOP_NOTIFICATION, //"notify",
 			Role:   role,
 		})
 	}
