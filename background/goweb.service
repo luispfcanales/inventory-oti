@@ -11,6 +11,7 @@ Group=root
 WorkingDirectory=/home/ec2-user/apps/inventory-oti
 #NOTE: MAIN IS THE NAME OF THE BINARY APPLICATION
 ExecStart=/home/ec2-user/apps/inventory-oti/main
+Environment=PORT=80
 
 #ExecStartPre=/bin/chmod 775 /home/ec2-user/apps/inventory-oti/main
 
