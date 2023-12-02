@@ -1,0 +1,21 @@
+[Unit]
+Description=goweb http server
+ConditionPathExists=/home/ec2-user/apps/inventory-oti
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+WorkingDirectory=/home/ec2-user/apps/inventory-oti
+#NOTE: MAIN IS THE NAME OF THE BINARY APPLICATION
+ExecStart=/home/ec2-user/apps/inventory-oti/main
+
+#ExecStartPre=/bin/chmod 775 /home/ec2-user/apps/inventory-oti/main
+
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
