@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -46,10 +45,6 @@ func (db *dbConfig) getConnection() *sql.DB {
 }
 
 func loadEnv(db *dbConfig) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("[ Error loading .env file]")
-	}
 	db.host = os.Getenv("HOST_DB")
 	db.user = os.Getenv("USER_DB")
 	db.password = os.Getenv("PASSWORD_DB")
@@ -57,7 +52,7 @@ func loadEnv(db *dbConfig) {
 
 	port, err := strconv.Atoi(os.Getenv("PORT_DB"))
 	if err != nil {
-		log.Fatal("[ Error loading PORT_DB .env file]")
+		log.Fatal("[ Error loading PORT_DB ]")
 	}
 	db.port = port
 }
