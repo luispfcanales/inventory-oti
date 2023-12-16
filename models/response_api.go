@@ -19,6 +19,11 @@ func NewResponseApi(c *fiber.Ctx) *ResponseApi {
 	}
 }
 
+func (r *ResponseApi) SendCustomJSON(statusCode int, message string) error {
+	r.Status = statusCode
+	r.Message = message
+	return r.c.JSON(r)
+}
 func (r *ResponseApi) SendJSON(data interface{}) error {
 	r.Status = http.StatusOK
 	r.Message = "success"

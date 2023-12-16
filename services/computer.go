@@ -16,6 +16,6 @@ func NewComputer(r ports.StorageComputerService) *computer {
 	}
 }
 func (c *computer) ListComputers() []*models.CPU {
-	result := c.repo.GetComputers()
+	result := c.repo.SelectComputers()
 	return result
 }

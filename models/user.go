@@ -1,26 +1,37 @@
 package models
 
+import "time"
+
+type Person struct {
+	IDPerson  int       `json:"dni,omitempty"`
+	FirstName string    `json:"first_name,omitempty"`
+	LastName  string    `json:"last_name,omitempty"`
+	Birthdate time.Time `json:"birthdate,omitempty"`
+	Address   string    `json:"address,omitempty"`
+}
+
 type User struct {
-	Key       string `json:"key,omitempty"`
-	Dni       string `json:"dni,omitempty"`
-	FirstName string `json:"first_name,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
-	Password  string `json:"password,omitempty"`
-	State     int    `json:"state"`
-	IDRole    string `json:"id_role,omitempty"`
-	IDStaff   string `json:"id_staff,omitempty"`
-	Email     string `json:"email,omitempty"`
+	Key      string `json:"key,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Password string `json:"-"`
+	Active   bool   `json:"active,omitempty"`
+	IDRole   int    `json:"id_role,omitempty"`
+	Staff    string `json:"staff,omitempty"`
+	Person
 
 	AccessToken string `json:"access_token,omitempty"`
 }
 
 type UserRequest struct {
-	Username string `json:"username,omitempty"`
+	Username string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
 }
 
 type UserResponse struct {
-	ID          string `json:"id,omitempty"`
+	ID          int    `json:"id,omitempty"`
 	AccessToken string `json:"access_token,omitempty"`
 	Username    string `json:"username,omitempty"`
+	Role        int    `json:"role,omitempty"`
+	Staff       string `json:"staff,omitempty"`
+	Active      bool   `json:"active"`
 }

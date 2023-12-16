@@ -15,12 +15,6 @@ import (
 // Keytoken is the secret key that signs the token
 var Keytoken = []byte("luiskey")
 
-type JWTCustomClaims struct {
-	IDUSER   string
-	Fullname string
-	jwt.RegisteredClaims
-}
-
 type auth struct {
 	repo ports.StorageUserService
 }
@@ -34,21 +28,26 @@ func NewAuth(r ports.StorageUserService) *auth {
 
 func (a *auth) AuthUser(username, password string) (models.User, error) {
 	var userNotFound error = errors.New("user not found")
-	u, err := a.repo.GetUserWithCredentials(username, password)
+	u, err := a.repo.SelectUserWithCredentials(username, password)
 
 	if err != nil {
 		log.Println("Error Service Auth:", err)
 		return models.User{}, userNotFound
 	}
 
-	if u.Key == "" {
+	if u.Person.IDPerson == 0 {
 		return models.User{}, userNotFound
 	}
 
-	t, err := a.GenerateToken(u.Key, fmt.Sprintf("%s %s", u.FirstName, u.LastName))
+	t, err := a.GenerateToken(
+		u.IDRole,
+		fmt.Sprintf("%s %s", u.FirstName, u.LastName),
+		u.Active,
+	)
 	if err != nil {
 		return models.User{}, err
 	}
+
 	u.AccessToken = t
 	return u, nil
 }
@@ -63,7 +62,7 @@ func (a *auth) ValidateTokenCookie(token string) bool {
 }
 func (a *auth) parseToken(tokenString string) error {
 
-	t, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	t, err := jwt.ParseWithClaims(tokenString, &models.JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return Keytoken, nil
 	})
 	if err != nil {
@@ -73,18 +72,24 @@ func (a *auth) parseToken(tokenString string) error {
 		return errors.New("internal server errror")
 	}
 
-	if claims, ok := t.Claims.(*JWTCustomClaims); ok && t.Valid {
-		log.Println("ID USER AUTH -> ", claims.IDUSER)
+	if claims, ok := t.Claims.(*models.JWTCustomClaims); ok && t.Valid {
+		log.Println("DETAIL USER AUTH -> ", fmt.Sprintf(
+			"[ ROLE: %d, FULLNAME: %s, ACTIVE: %v ]",
+			claims.Role,
+			claims.Fullname,
+			claims.Active,
+		))
 		return nil
 	}
 
 	return fiber.ErrUnauthorized
 }
 
-func (a *auth) GenerateToken(id string, fullname string) (string, error) {
-	claims := &JWTCustomClaims{
-		id,
+func (a *auth) GenerateToken(role int, fullname string, active bool) (string, error) {
+	claims := &models.JWTCustomClaims{
+		role,
 		fullname,
+		active,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
 		},

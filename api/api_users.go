@@ -19,7 +19,7 @@ func GetAllUsers(userSrv ports.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		res := models.NewResponseApi(c)
 
-		list, err := userSrv.ListAll()
+		list, err := userSrv.ListAllUsers()
 		if err != nil {
 			log.Println(err)
 			return res.NotFoundJSON()
@@ -40,7 +40,7 @@ func CreateUser(userSrv ports.UserService) fiber.Handler {
 			return res.BadRequestJSON()
 		}
 
-		err = userSrv.Save(u)
+		err = userSrv.SaveUser(u)
 		if err != nil {
 			log.Println(err)
 			return res.BadRequestDataJSON(err.Error())

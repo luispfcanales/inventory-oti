@@ -17,15 +17,15 @@ func NewUser(r ports.StorageUserService) ports.UserService {
 	}
 }
 
-func (us *UserSrv) ListAll() ([]models.User, error) {
-	listUsers, err := us.repo.GetUsers()
+func (us *UserSrv) ListAllUsers() ([]models.User, error) {
+	listUsers, err := us.repo.SelectUsers()
 	if err != nil {
 		return nil, errors.New("[fn ListAll] StorageService Error")
 	}
 	return listUsers, nil
 }
 
-func (us *UserSrv) Save(u models.User) error {
+func (us *UserSrv) SaveUser(u models.User) error {
 	err := us.repo.InsertUser(u)
 	if err != nil {
 		return err

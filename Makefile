@@ -1,7 +1,5 @@
 run: build
 	@./bin/main
-css:
-	npx tailwindcss -i ./tailwindcss-input.css -o ./public/dist/output.css --watch
 build:
 	@go build -o ./bin/main .
 start: build

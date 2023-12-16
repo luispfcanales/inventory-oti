@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/luispfcanales/inventory-oti/models"
@@ -22,23 +23,24 @@ func Login(authSrv ports.AuthService) fiber.Handler {
 			return res.BadRequestJSON()
 		}
 
+		log.Println(user)
 		if user.Password == "" || user.Username == "" {
 			return res.NotFoundJSON()
 		}
 
 		u, err := authSrv.AuthUser(user.Username, user.Password)
 		if err != nil {
+			log.Println(err)
 			return res.NotFoundJSON()
 		}
 
-		if u.Key == "" {
-			return res.NotFoundJSON()
-		}
-
+		c.Set("Authorization", "Bearer "+u.AccessToken)
 		return res.SendJSON(&models.UserResponse{
-			ID:          u.Key,
-			AccessToken: u.AccessToken,
-			Username:    fmt.Sprintf("%s %s", u.FirstName, u.LastName),
+			ID:       u.Person.IDPerson,
+			Username: fmt.Sprintf("%s %s", u.FirstName, u.LastName),
+			Role:     u.IDRole,
+			Staff:    u.Staff,
+			Active:   u.Active,
 		})
 	}
 }
