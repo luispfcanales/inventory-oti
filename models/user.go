@@ -31,7 +31,7 @@ type UserResponse struct {
 	ID          int    `json:"id,omitempty"`
 	AccessToken string `json:"access_token,omitempty"`
 	Username    string `json:"username,omitempty"`
-	Role        int    `json:"role,omitempty"`
+	Role        string `json:"role,omitempty"`
 	Staff       string `json:"staff,omitempty"`
 	Active      bool   `json:"active"`
 }
