@@ -10,11 +10,12 @@ Group=root
 
 WorkingDirectory=/home/ec2-user/apps/inventory-oti
 #NOTE: MAIN IS THE NAME OF THE BINARY APPLICATION
+#change variable to production app
 Environment=PORT=80
-Environment=HOST_DB=80
-Environment=PORT_DB=80
-Environment=USER_DB=80
-Environment=PASSWORD_DB=80
+Environment=HOST_DB="18.219.214.89"
+Environment=PORT_DB=5432
+Environment=USER_DB="postgres"
+Environment=PASSWORD_DB="luis"
 ExecStart=/home/ec2-user/apps/inventory-oti/main
 
 #ExecStartPre=/bin/chmod 775 /home/ec2-user/apps/inventory-oti/main

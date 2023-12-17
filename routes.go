@@ -72,11 +72,12 @@ func ConfigRoutes(app *fiber.App) {
 // CreateApiRoutes create new routes to /api/anyroutes
 func CreateApiRoutes(app *fiber.App) {
 	app.Use(recover.New())
-	rest := app.Group("/api")
-	rest.Use(cors.New(cors.Config{
+
+	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
+	rest := app.Group("/api")
 
 	//a.Get("", api.Documentation)
 	app.Post("/login", api.Login(AUTH_SRV))
