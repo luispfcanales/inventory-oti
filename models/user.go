@@ -15,7 +15,7 @@ type User struct {
 	Email    string `json:"email,omitempty"`
 	Password string `json:"-"`
 	Active   bool   `json:"active,omitempty"`
-	IDRole   int    `json:"id_role,omitempty"`
+	IDRole   string `json:"id_role,omitempty"`
 	Staff    string `json:"staff,omitempty"`
 	Person
 

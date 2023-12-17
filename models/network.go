@@ -1,12 +1,12 @@
 package models
 
 type Network_connection struct {
-	ID             int    `json:"id,omitempty"`
+	ID             string `json:"id,omitempty"`
 	TypeConnection string `json:"type_connection,omitempty"`
 }
 
 type Network struct {
-	ID        int                `json:"id,omitempty"`
+	ID        string             `json:"id,omitempty"`
 	IpAddress string             `json:"ip_address,omitempty"`
 	NetConn   Network_connection `json:"net_conn,omitempty"`
 }

@@ -74,7 +74,7 @@ func (a *auth) parseToken(tokenString string) error {
 
 	if claims, ok := t.Claims.(*models.JWTCustomClaims); ok && t.Valid {
 		log.Println("DETAIL USER AUTH -> ", fmt.Sprintf(
-			"[ ROLE: %d, FULLNAME: %s, ACTIVE: %v ]",
+			"[ ROLE: %s, FULLNAME: %s, ACTIVE: %v ]",
 			claims.Role,
 			claims.Fullname,
 			claims.Active,
@@ -85,7 +85,7 @@ func (a *auth) parseToken(tokenString string) error {
 	return fiber.ErrUnauthorized
 }
 
-func (a *auth) GenerateToken(role int, fullname string, active bool) (string, error) {
+func (a *auth) GenerateToken(role string, fullname string, active bool) (string, error) {
 	claims := &models.JWTCustomClaims{
 		role,
 		fullname,

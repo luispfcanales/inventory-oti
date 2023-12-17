@@ -1,7 +1,7 @@
 package models
 
 type Zone struct {
-	ID           int    `json:"id,omitempty"`
+	ID           string `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
 	FloorNumbers int    `json:"floor_numbers,omitempty"`
 	Color        string `json:"color,omitempty"`
