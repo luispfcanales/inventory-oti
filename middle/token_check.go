@@ -7,42 +7,44 @@ import (
 	"github.com/luispfcanales/inventory-oti/services"
 )
 
-func CheckToken(c *fiber.Ctx) error {
-	tokenString := c.Get("Authorization")
-	if tokenString == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Missing Authorization header",
-		})
-	}
-
-	token, err := jwt.ParseWithClaims(tokenString[7:], &models.JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return services.Keytoken, nil
-	})
-	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
+func CheckToken(hdl fiber.Handler) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		tokenString := c.Get("Authorization")
+		if tokenString == "" {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "Invalid token signature",
+				"error": "Missing Authorization header",
 			})
 		}
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid token",
-		})
-	}
 
-	if !token.Valid {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Invalid token",
+		token, err := jwt.ParseWithClaims(tokenString[7:], &models.JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return services.Keytoken, nil
 		})
-	}
-	claims, ok := token.Claims.(*models.JWTCustomClaims)
-	if !ok {
-	}
+		if err != nil {
+			if err == jwt.ErrSignatureInvalid {
+				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+					"error": "Invalid token signature",
+				})
+			}
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Invalid token",
+			})
+		}
 
-	if !claims.Active {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Usuario desactivado",
-		})
-	}
+		if !token.Valid {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"error": "Invalid token",
+			})
+		}
+		claims, ok := token.Claims.(*models.JWTCustomClaims)
+		if !ok {
+		}
 
-	return c.Next()
+		if !claims.Active {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"error": "Usuario desactivado",
+			})
+		}
+
+		return hdl(c)
+	}
 }
