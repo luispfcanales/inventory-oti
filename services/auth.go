@@ -40,7 +40,7 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 	}
 
 	t, err := a.GenerateToken(
-		u.IDRole,
+		u.RoleName,
 		fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		u.Active,
 	)

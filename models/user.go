@@ -13,11 +13,11 @@ type Person struct {
 type User struct {
 	Key      string `json:"key,omitempty"`
 	Email    string `json:"email,omitempty"`
-	Password string `json:"-"`
+	Password string `json:"-,omitempty"`
 	Active   bool   `json:"active,omitempty"`
-	IDRole   string `json:"id_role,omitempty"`
+	RoleName string `json:"role_name,omitempty"`
 	Staff    string `json:"staff,omitempty"`
-	Person
+	Person   `json:"person,omitempty"`
 
 	AccessToken string `json:"access_token,omitempty"`
 }

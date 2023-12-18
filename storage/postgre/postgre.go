@@ -28,7 +28,7 @@ func NewPostgreStorage() *dbConfig {
 
 func (db *dbConfig) getConnection() *sql.DB {
 	str := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		"host=%s port=%d user=%s password=%s dbname=%s",
 		db.host, db.port, db.user, db.password, db.dbname,
 	)
 	once.Do(func() {
@@ -47,5 +47,5 @@ func loadEnv(db *dbConfig) {
 	db.user = "postgres"
 	db.password = "luis"
 	db.dbname = "oti"
-	db.port = 80
+	db.port = 5432
 }

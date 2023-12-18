@@ -11,12 +11,13 @@ func (db *dbConfig) SelectUserWithCredentials(email string, pwd string) (models.
 	u := models.User{}
 	stmt, err := db.getConnection().Prepare(`
 		SELECT 
-		u.id_person, u.email, u.password, u.active, u.id_role,
+		u.id_person, u.email, u.password, u.active, role.name,
 		staff.name AS staff,
 		p.first_name, p.last_name
 		FROM users u
 		JOIN staff on u.id_staff = staff.id 
 		JOIN person p on u.id_person = p.id_dni
+		JOIN role on role.id = u.id_role
 		WHERE 
 		u.email = $1 AND u.password = $2
 	`)
@@ -32,7 +33,7 @@ func (db *dbConfig) SelectUserWithCredentials(email string, pwd string) (models.
 		&u.Email,
 		&u.Password,
 		&u.Active,
-		&u.IDRole,
+		&u.RoleName,
 		&u.Staff,
 		&u.FirstName,
 		&u.LastName,
@@ -51,12 +52,13 @@ func (db *dbConfig) SelectUsers() ([]models.User, error) {
 	var users []models.User
 	rows, err := db.getConnection().Query(`
 		SELECT 
-		u.id_person, u.email, u.password, u.active, u.id_role,
+		u.id_person, u.email, u.password, u.active, role.name,
 		staff.name AS staff,
 		p.first_name, p.last_name, p.birthdate
 		FROM users u
 		JOIN staff on u.id_staff = staff.id 
 		JOIN person p on u.id_person = p.id_dni
+		JOIN role on role.id = u.id_role
 	`)
 	if err != nil {
 		log.Println(err)
@@ -71,7 +73,7 @@ func (db *dbConfig) SelectUsers() ([]models.User, error) {
 			&u.Email,
 			&u.Password,
 			&u.Active,
-			&u.IDRole,
+			&u.RoleName,
 			&u.Staff,
 			&u.FirstName,
 			&u.LastName,
