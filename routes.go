@@ -73,20 +73,35 @@ func ConfigRoutes(app *fiber.App) {
 func CreateApiRoutes(app *fiber.App) {
 	app.Use(recover.New())
 
+	app.Post("/login", api.Login(AUTH_SRV))
 	app.Use(cors.New(cors.Config{
 		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
-        	AllowOrigins:     "*",
-       		AllowCredentials: true,
-        	AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
+		ExposeHeaders:    "Authorization",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
 	}))
 	rest := app.Group("/api")
+	rest.Use(cors.New(cors.Config{
+		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
+		ExposeHeaders:    "Authorization",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+	}))
 
 	//a.Get("", api.Documentation)
-	app.Get("/all", api.GetAllUsers(USER_SRV))
 	rest.Use(middle.CheckToken)
 
 	usersApi := rest.Group("/users")
-	usersApi.Post("/login", api.Login(AUTH_SRV))
+	usersApi.Use(cors.New(cors.Config{
+		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
+		ExposeHeaders:    "Authorization",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+	}))
+	usersApi.Get("/all", api.GetAllUsers(USER_SRV))
 	usersApi.Post("", api.CreateUser(USER_SRV))
 	usersApi.Put("", api.UpdateUser(USER_SRV))
 
