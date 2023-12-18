@@ -74,7 +74,7 @@ func CreateApiRoutes(app *fiber.App) {
 	app.Use(recover.New())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "https://tudominio.com",
+		AllowOrigins: "*",
 		AllowMethods: "GET, POST, PUT, DELETE",
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
