@@ -73,7 +73,6 @@ func ConfigRoutes(app *fiber.App) {
 func CreateApiRoutes(app *fiber.App) {
 	app.Use(recover.New())
 
-	app.Post("/login", api.Login(AUTH_SRV))
 	app.Use(cors.New(cors.Config{
 		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
 		AllowOrigins:     "*",
@@ -81,6 +80,7 @@ func CreateApiRoutes(app *fiber.App) {
 		ExposeHeaders:    "Authorization",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
 	}))
+	app.Post("/login", api.Login(AUTH_SRV))
 	rest := app.Group("/api")
 	rest.Use(cors.New(cors.Config{
 		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
