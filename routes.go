@@ -75,11 +75,8 @@ func CreateApiRoutes(app *fiber.App) {
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
-		AllowMethods:     "GET, POST, PUT, DELETE",
+		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
 		AllowHeaders:     "Origin, Content-Type, Accept",
-		ExposeHeaders:    "Authorization",
-		AllowCredentials: true,
-		MaxAge:           3600,
 	}))
 	rest := app.Group("/api")
 
