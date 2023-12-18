@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/websocket/v2"
 	"github.com/luispfcanales/inventory-oti/api"
 	"github.com/luispfcanales/inventory-oti/controller"
+	"github.com/luispfcanales/inventory-oti/middle"
 	"github.com/luispfcanales/inventory-oti/ports"
 	"github.com/luispfcanales/inventory-oti/services"
 	"github.com/luispfcanales/inventory-oti/storage/postgre"
@@ -82,28 +83,11 @@ func CreateApiRoutes(app *fiber.App) {
 	}))
 	app.Post("/login", api.Login(AUTH_SRV))
 	rest := app.Group("/api")
-	rest.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
-		AllowCredentials: true,
-		ExposeHeaders:    "Authorization",
-		MaxAge:           3600,
-	}))
-
 	//a.Get("", api.Documentation)
 	//rest.Use(middle.CheckToken)
 
 	usersApi := rest.Group("/users")
-	usersApi.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
-		AllowCredentials: true,
-		ExposeHeaders:    "Authorization",
-		MaxAge:           3600,
-	}))
-	usersApi.Get("/all", api.GetAllUsers(USER_SRV))
+	usersApi.Get("/all", middle.CheckToken, api.GetAllUsers(USER_SRV))
 	usersApi.Post("", api.CreateUser(USER_SRV))
 	usersApi.Put("", api.UpdateUser(USER_SRV))
 
