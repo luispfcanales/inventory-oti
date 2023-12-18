@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 	"sync"
 
 	_ "github.com/lib/pq"
@@ -45,14 +43,9 @@ func (db *dbConfig) getConnection() *sql.DB {
 }
 
 func loadEnv(db *dbConfig) {
-	db.host = os.Getenv("HOST_DB")
-	db.user = os.Getenv("USER_DB")
-	db.password = os.Getenv("PASSWORD_DB")
-	db.dbname = os.Getenv("DBNAME_DB")
-
-	port, err := strconv.Atoi(os.Getenv("PORT_DB"))
-	if err != nil {
-		log.Fatal("[ Error loading PORT_DB ]")
-	}
-	db.port = port
+	db.host = "localhost"
+	db.user = "postgres"
+	db.password = "luis"
+	db.dbname = "oti"
+	db.port = 80
 }
