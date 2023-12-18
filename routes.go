@@ -20,6 +20,7 @@ var (
 	REPOSITORY_NETWORK ports.StorageNetworkService
 	REPOSITORY_CAMPUS  ports.StorageCampusService
 	REPOSITORY_ZONE    ports.StorageZoneService
+	REPOSITORY_DEVICE  ports.StorageDeviceService
 
 	AUTH_SRV    ports.AuthService
 	CPU_SRV     ports.ComputerService
@@ -28,6 +29,7 @@ var (
 	NETWORK_SRV ports.NetworkService
 	CAMPUS_SRV  ports.CampusService
 	ZONE_SRV    ports.ZoneService
+	DEVICE_SRV  ports.DeviceService
 
 	API_DNI_SRV ports.ApiService
 
@@ -45,6 +47,7 @@ func init() {
 	REPOSITORY_NETWORK = REPOSITORY
 	REPOSITORY_CAMPUS = REPOSITORY
 	REPOSITORY_ZONE = REPOSITORY
+	REPOSITORY_DEVICE = REPOSITORY
 
 	AUTH_SRV = services.NewAuth(REPOSITORY_USER)
 	CPU_SRV = services.NewComputer(REPOSITORY_CPU)
@@ -53,6 +56,7 @@ func init() {
 	NETWORK_SRV = services.NewNetwork(REPOSITORY_NETWORK)
 	CAMPUS_SRV = services.NewCampus(REPOSITORY_CAMPUS)
 	ZONE_SRV = services.NewZone(REPOSITORY_ZONE)
+	DEVICE_SRV = services.NewDevice(REPOSITORY_DEVICE)
 
 	API_DNI_SRV = services.NewApiDni()
 
@@ -103,6 +107,9 @@ func CreateApiRoutes(app *fiber.App) {
 	zoneApi := rest.Group("/zone")
 	zoneApi.Get("/all", api.HdlGetAllZone(ZONE_SRV))
 	zoneApi.Get("/:id", api.HdlGetZone(ZONE_SRV))
+
+	deviceApi := rest.Group("/device")
+	deviceApi.Get("/all/resume", api.HdlGetAllDevice(DEVICE_SRV))
 
 	rest.Get("/computers", api.GetComputers(CPU_SRV))
 
