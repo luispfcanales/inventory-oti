@@ -1,6 +1,6 @@
 [Unit]
 Description=goweb http server
-ConditionPathExists=/home/ec2-user/apps/inventory-oti
+ConditionPathExists=/home/ubuntu/apps/inventory-oti
 After=network.target
 
 [Service]
@@ -8,15 +8,17 @@ Type=simple
 User=root
 Group=root
 
-WorkingDirectory=/home/ec2-user/apps/inventory-oti
+WorkingDirectory=/home/ubuntu/apps/inventory-oti
 #NOTE: MAIN IS THE NAME OF THE BINARY APPLICATION
 #change variable to production app
+
 Environment=PORT=80
-Environment=HOST_DB="18.219.214.89"
+Environment=HOST_DB="localhost"
 Environment=PORT_DB=5432
 Environment=USER_DB="postgres"
+Environment=DBNAME_DB="oti"
 Environment=PASSWORD_DB="luis"
-ExecStart=/home/ec2-user/apps/inventory-oti/main
+ExecStart=/home/ubuntu/apps/inventory-oti/main
 
 #ExecStartPre=/bin/chmod 775 /home/ec2-user/apps/inventory-oti/main
 

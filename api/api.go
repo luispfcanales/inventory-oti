@@ -36,11 +36,12 @@ func Login(authSrv ports.AuthService) fiber.Handler {
 
 		c.Set("Authorization", "Bearer "+u.AccessToken)
 		return res.SendJSON(&models.UserResponse{
-			ID:       u.Person.IDPerson,
-			Username: fmt.Sprintf("%s %s", u.FirstName, u.LastName),
-			Role:     u.IDRole,
-			Staff:    u.Staff,
-			Active:   u.Active,
+			ID:          u.Person.IDPerson,
+			Username:    fmt.Sprintf("%s %s", u.FirstName, u.LastName),
+			Role:        u.IDRole,
+			Staff:       u.Staff,
+			Active:      u.Active,
+			AccessToken: u.AccessToken,
 		})
 	}
 }
