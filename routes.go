@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/websocket/v2"
 	"github.com/luispfcanales/inventory-oti/api"
 	"github.com/luispfcanales/inventory-oti/controller"
-	"github.com/luispfcanales/inventory-oti/middle"
 	"github.com/luispfcanales/inventory-oti/ports"
 	"github.com/luispfcanales/inventory-oti/services"
 	"github.com/luispfcanales/inventory-oti/storage/postgre"
@@ -93,7 +92,7 @@ func CreateApiRoutes(app *fiber.App) {
 	}))
 
 	//a.Get("", api.Documentation)
-	rest.Use(middle.CheckToken)
+	//rest.Use(middle.CheckToken)
 
 	usersApi := rest.Group("/users")
 	usersApi.Use(cors.New(cors.Config{
