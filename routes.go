@@ -86,14 +86,14 @@ func CreateApiRoutes(app *fiber.App) {
 	//a.Get("", api.Documentation)
 	//rest.Use(middle.CheckToken)
 
-	usersApi := rest.Group("/users", cors.New(cors.Config{
+	usersApi := rest.Group("/users", middle.CheckToken, cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
 		AllowHeaders:     "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
 		AllowCredentials: true,
 		ExposeHeaders:    "Authorization",
 		MaxAge:           3600,
-	}), middle.CheckToken)
+	}))
 	usersApi.Get("/all", api.GetAllUsers(USER_SRV))
 	usersApi.Post("", api.CreateUser(USER_SRV))
 	usersApi.Put("", api.UpdateUser(USER_SRV))
