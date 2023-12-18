@@ -74,7 +74,8 @@ func CreateApiRoutes(app *fiber.App) {
 	app.Use(recover.New())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins: "https://tudominio.com",
+		AllowMethods: "GET, POST, PUT, DELETE",
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 	rest := app.Group("/api")
