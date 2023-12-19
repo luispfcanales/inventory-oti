@@ -10,11 +10,11 @@ var directoryServiceSheet string = "/home/ubuntu/storage-oti-files"
 
 func HdlFileSystemS3(c *fiber.Ctx) error {
 
-	keyfile := c.Params("keyfile")
+	//keyfile := c.Params("keyfile")
 	fullpath := fmt.Sprintf(
 		"%s/%s",
 		directoryServiceSheet,
-		keyfile,
+		"diagrama_modificado.png",
 	)
 
 	return c.SendFile(fullpath)
