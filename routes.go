@@ -113,6 +113,10 @@ func CreateApiRoutes(app *fiber.App) {
 
 	rest.Get("/computers", api.GetComputers(CPU_SRV))
 
+	//filesystem with s3
+	fileApi := rest.Group("/file")
+	fileApi.Get("/:keyfile", nil)
+
 	rest.Get("/dni/:dni<int>?", api.GetDataDni(API_DNI_SRV))
 }
 

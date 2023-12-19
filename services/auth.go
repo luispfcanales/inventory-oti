@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
@@ -90,9 +89,8 @@ func (a *auth) GenerateToken(role string, fullname string, active bool) (string,
 		role,
 		fullname,
 		active,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
-		},
+		jwt.RegisteredClaims{},
+		//ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
