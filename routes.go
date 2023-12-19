@@ -115,7 +115,7 @@ func CreateApiRoutes(app *fiber.App) {
 
 	//filesystem with s3
 	fileApi := rest.Group("/file")
-	fileApi.Get("/:keyfile", nil)
+	fileApi.Get("/:keyfile", api.HdlFileSystemS3)
 
 	rest.Get("/dni/:dni<int>?", api.GetDataDni(API_DNI_SRV))
 }
