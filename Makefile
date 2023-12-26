@@ -1,7 +1,9 @@
 run: build
-	@./bin/main
+	@./main
 build:
-	@go build -o ./bin/main .
+	@go build -o main .
+bucket:
+	s3fs oti-bucket /mnt/s3 -o passwd_file=~/.passwd-s3fs
 start: build
 	@./service-daemon.sh
 	@echo "[ Execute next commands to load service ]"

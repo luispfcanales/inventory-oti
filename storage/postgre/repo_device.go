@@ -8,6 +8,39 @@ import (
 	"github.com/luispfcanales/inventory-oti/models"
 )
 
+func (db *dbConfig) InsertDevice(d models.Device) (models.Device, error) {
+	str := `
+		INSERT INTO device(patrimonial_code,serial_code,brand,model_name,
+			id_state_device,
+			id_type_device,
+			id_dependency,
+			adquisition_date,
+			more_info
+		)
+		VALUES ($1,$2,$3,$4,
+			$5,
+			$6,
+			$7,
+			$8,
+			$9
+		)
+	`
+	_, err := db.getConnection().Exec(
+		str,
+		d.PatrimonialCode, d.SerialCode, d.Brand, d.ModelName,
+		d.StateDevice,
+		d.TypeDevice,
+		d.DependencyDevice,
+		d.AdquisitionDate,
+		d.MoreInfo,
+	)
+	if err != nil {
+		return models.Device{}, err
+	}
+
+	return d, nil
+}
+
 func (db *dbConfig) SelectAllDevice() []models.Device {
 	var list []models.Device
 	str := `
@@ -54,10 +87,10 @@ func (db *dbConfig) SelectAllDevice() []models.Device {
 
 		v, ok := value.(time.Time)
 		if !ok {
-			r.AdquisitonDate = "0000-00-00"
+			r.AdquisitionDate = "0000-00-00"
 			list = append(list, r)
 		} else {
-			r.AdquisitonDate = v.Format("2006-01-02")
+			r.AdquisitionDate = v.Format("2006-01-02")
 			list = append(list, r)
 		}
 	}

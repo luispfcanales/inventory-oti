@@ -8,14 +8,6 @@ import (
 )
 
 func CheckToken(c *fiber.Ctx) error {
-	//c.Set("Access-Control-Allow-Origin", "*")
-	//c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
-	//c.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
-	//c.Set("Access-Control-Expose-Headers", "Authorization")
-	//c.Set("Access-Control-Allow-Credentials", "true")
-	//c.Set("Access-Control-Max-Age", "3600")
-	//log.Println("si llego con las acbeceras")
-
 	tokenString := c.Get("Authorization")
 	if tokenString == "" {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{

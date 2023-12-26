@@ -34,11 +34,12 @@ func (a *auth) AuthUser(username, password string) (models.User, error) {
 		return models.User{}, userNotFound
 	}
 
-	if u.Person.IDPerson == 0 {
+	if u.Person.IDPerson == "" {
 		return models.User{}, userNotFound
 	}
 
 	t, err := a.GenerateToken(
+		u.Person.IDPerson,
 		u.RoleName,
 		fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		u.Active,
@@ -84,8 +85,9 @@ func (a *auth) parseToken(tokenString string) error {
 	return fiber.ErrUnauthorized
 }
 
-func (a *auth) GenerateToken(role string, fullname string, active bool) (string, error) {
+func (a *auth) GenerateToken(id, role, fullname string, active bool) (string, error) {
 	claims := &models.JWTCustomClaims{
+		id,
 		role,
 		fullname,
 		active,
