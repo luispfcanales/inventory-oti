@@ -32,6 +32,7 @@ var (
 	DEVICE_SRV  ports.DeviceService
 
 	API_DNI_SRV ports.ApiService
+	PDF_SRV     ports.FileService
 
 	STREAMING_SRV ports.StramingComputerService
 )
@@ -59,6 +60,7 @@ func init() {
 	DEVICE_SRV = services.NewDevice(REPOSITORY_DEVICE)
 
 	API_DNI_SRV = services.NewApiDni()
+	PDF_SRV = services.NewPDFSrv()
 
 	STREAMING_SRV = services.NewConnectionWSmanager()
 }
@@ -88,10 +90,10 @@ func CreateApiRoutes(app *fiber.App) {
 
 	personApi := rest.Group("/person")
 	personApi.Get("/all", api.HdlGetAllPersons(PERSON_SRV))
-	personApi.Get("/:dni<int>?", api.HdlGetPerson(PERSON_SRV))
+	personApi.Get("/:dni", api.HdlGetPerson(PERSON_SRV))
 	personApi.Post("", api.HdlPostPerson(PERSON_SRV))
 	personApi.Put("", api.HdlPutPerson(PERSON_SRV))
-	personApi.Delete("/:dni<int>?", api.HdlDeletePerson(PERSON_SRV))
+	personApi.Delete("/:dni", api.HdlDeletePerson(PERSON_SRV))
 
 	networkApi := rest.Group("/network")
 	networkApi.Get("/all", api.HdlGetAllNetworks(NETWORK_SRV))
@@ -109,6 +111,7 @@ func CreateApiRoutes(app *fiber.App) {
 	zoneApi.Get("/:id", api.HdlGetZone(ZONE_SRV))
 
 	deviceApi := rest.Group("/device")
+	deviceApi.Post("", api.HdlPostDevice(DEVICE_SRV))
 	deviceApi.Get("/all/resume", api.HdlGetAllDevice(DEVICE_SRV))
 
 	rest.Get("/computers", api.GetComputers(CPU_SRV))
@@ -118,7 +121,10 @@ func CreateApiRoutes(app *fiber.App) {
 	app.Get("file/:keyfile", api.HdlGetFileS3)
 	app.Post("file/upload", api.HdlPostFileS3)
 
-	rest.Get("/dni/:dni<int>?", api.GetDataDni(API_DNI_SRV))
+	//firma digital pdf hoja de servicio
+	app.Get("/pdf", api.PreviewPDF(PDF_SRV))
+
+	rest.Get("/dni/:dni", api.GetDataDni(API_DNI_SRV))
 }
 
 // Create Websockets to realtime application

@@ -1,11 +1,10 @@
 module github.com/luispfcanales/inventory-oti
 
-go 1.21.1
-
-toolchain go1.21.5
+go 1.21.5
 
 require (
 	github.com/deta/deta-go v1.0.0
+	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/websocket/v2 v2.2.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
@@ -20,7 +19,6 @@ require (
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/f-amaral/go-async v0.3.0 // indirect
 	github.com/fasthttp/websocket v1.5.3 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/hhrutter/lzw v1.0.0 // indirect
 	github.com/hhrutter/tiff v1.0.1 // indirect
 	github.com/johnfercher/go-tree v1.0.5 // indirect
