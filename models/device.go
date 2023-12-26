@@ -13,6 +13,6 @@ type Device struct {
 	StateDevice      string          `json:"state_device,omitempty"`
 	TypeDevice       string          `json:"type_device,omitempty"`
 	DependencyDevice string          `json:"dependency_device,omitempty"`
-	AdquisitonDate   string          `json:"adquisiton_date,omitempty"`
+	AdquisitionDate  string          `json:"adquisition_date,omitempty"`
 	MoreInfo         json.RawMessage `json:"more_info,omitempty"`
 }
