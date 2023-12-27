@@ -84,6 +84,8 @@ func CreateApiRoutes(app *fiber.App) {
 
 	usersApi := rest.Group("/users")
 	usersApi.Get("/all", api.GetAllUsers(USER_SRV))
+	usersApi.Get("/list/staff", api.HdlGetStaff(USER_SRV))
+	usersApi.Get("/list/roles", api.HdlGetRole(USER_SRV))
 	usersApi.Post("", api.CreateUser(USER_SRV))
 	usersApi.Put("", api.UpdateUser(USER_SRV))
 

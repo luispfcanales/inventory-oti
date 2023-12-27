@@ -10,14 +10,24 @@ type Person struct {
 	Address   string    `json:"address,omitempty"`
 }
 
+type Staff struct {
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+type Role struct {
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
 type User struct {
-	Key      string `json:"key,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"-"`
-	Active   bool   `json:"active,omitempty"`
-	RoleName string `json:"role_name,omitempty"`
-	Staff    string `json:"staff,omitempty"`
-	Person   `json:"person,omitempty"`
+	Key          string `json:"key,omitempty"`
+	Email        string `json:"email,omitempty"`
+	Password     string `json:"-,omitempty"`
+	Active       bool   `json:"active,omitempty"`
+	RoleName     string `json:"role_name,omitempty"`
+	Staff        string `json:"staff,omitempty"`
+	IDDependency string `json:"id_dependency,omitempty"`
+	Person       `json:"person,omitempty"`
 
 	AccessToken string `json:"access_token,omitempty"`
 }

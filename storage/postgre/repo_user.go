@@ -7,6 +7,69 @@ import (
 	"github.com/luispfcanales/inventory-oti/models"
 )
 
+func (db *dbConfig) SelectStaff() ([]models.Staff, error) {
+	var staff []models.Staff
+	rows, err := db.getConnection().Query(`
+		SELECT 
+		id,name
+		FROM staff
+	`)
+	if err != nil {
+		log.Println(err)
+		return staff, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		u := models.Staff{}
+		err = rows.Scan(
+			&u.ID,
+			&u.Name,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		staff = append(staff, u)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return staff, nil
+}
+func (db *dbConfig) SelectRole() ([]models.Role, error) {
+	var role []models.Role
+	rows, err := db.getConnection().Query(`
+		SELECT 
+		id,name
+		FROM staff
+	`)
+	if err != nil {
+		log.Println(err)
+		return role, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		u := models.Role{}
+		err = rows.Scan(
+			&u.ID,
+			&u.Name,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		role = append(role, u)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return role, nil
+}
+
 func (db *dbConfig) SelectUserWithCredentials(email string, pwd string) (models.User, error) {
 	u := models.User{}
 	stmt, err := db.getConnection().Prepare(`
@@ -92,6 +155,29 @@ func (db *dbConfig) SelectUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func (db *dbConfig) InsertUser(_ models.User) error {
-	panic("not implemented") // TODO: Implement
+func (db *dbConfig) InsertUser(u *models.User) error {
+	str := `
+		INSERT INTO users(
+			id, email,password,active,id_person,id_role,
+			update_at,
+			id_dependency, id_staff
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7, $8)
+	`
+	_, err := db.getConnection().Exec(
+		str,
+		u.Key,
+		u.Email,
+		"12345678",
+		u.Active,
+		u.IDPerson,
+		u.RoleName,
+		u.IDDependency,
+		u.Staff,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

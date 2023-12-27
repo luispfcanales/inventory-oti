@@ -6,11 +6,15 @@ import "github.com/luispfcanales/inventory-oti/models"
 type StorageUserService interface {
 	SelectUserWithCredentials(email, pwd string) (models.User, error)
 	SelectUsers() ([]models.User, error)
-	InsertUser(models.User) error
+	SelectStaff() ([]models.Staff, error)
+	SelectRole() ([]models.Role, error)
+	InsertUser(*models.User) error
 }
 
 type UserService interface {
 	//GetByID(id string) (models.User, error)
 	ListAllUsers() ([]models.User, error)
-	SaveUser(models.User) error
+	SaveUser(*models.User) error
+	ListStaff() ([]models.Staff, error)
+	ListRole() ([]models.Role, error)
 }

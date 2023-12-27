@@ -17,15 +17,36 @@ func GetUserInfoByID(authSrv ports.AuthService) fiber.Handler {
 
 func GetAllUsers(userSrv ports.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		c.Set("Access-Control-Allow-Origin", "*")
-		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
-		c.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
-		c.Set("Access-Control-Expose-Headers", "Authorization")
-		c.Set("Access-Control-Allow-Credentials", "true")
-		c.Set("Access-Control-Max-Age", "3600")
 		res := models.NewResponseApi(c)
 
 		list, err := userSrv.ListAllUsers()
+		if err != nil {
+			log.Println(err)
+			return res.NotFoundJSON()
+		}
+
+		return res.SendJSON(list)
+	}
+}
+
+func HdlGetRole(userSrv ports.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		res := models.NewResponseApi(c)
+
+		list, err := userSrv.ListRole()
+		if err != nil {
+			log.Println(err)
+			return res.NotFoundJSON()
+		}
+
+		return res.SendJSON(list)
+	}
+}
+func HdlGetStaff(userSrv ports.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		res := models.NewResponseApi(c)
+
+		list, err := userSrv.ListStaff()
 		if err != nil {
 			log.Println(err)
 			return res.NotFoundJSON()
@@ -46,7 +67,7 @@ func CreateUser(userSrv ports.UserService) fiber.Handler {
 			return res.BadRequestJSON()
 		}
 
-		err = userSrv.SaveUser(u)
+		err = userSrv.SaveUser(&u)
 		if err != nil {
 			log.Println(err)
 			return res.BadRequestDataJSON(err.Error())
