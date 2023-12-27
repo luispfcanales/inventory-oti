@@ -22,7 +22,6 @@ func NewServer(e *fiber.App) *server {
 func (s *server) Run() error {
 	log.SetFlags(log.Lshortfile | log.Ldate)
 	ConfigRoutes(s.engine)
-	//return s.engine.ListenTLS(":443", "server.crt", "server.key")
 	return s.engine.Listen(s.getPort())
 }
 
