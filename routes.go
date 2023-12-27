@@ -39,7 +39,6 @@ var (
 
 // initialized all services
 func init() {
-	//REPOSITORY := clouddeta.NewCloudDetaStorage("e0ytsyfs3et_F3KZDz938AnuKc62WXBdzjt1WnKrNHh8")
 	REPOSITORY := postgre.NewPostgreStorage()
 
 	REPOSITORY_USER = REPOSITORY
@@ -118,7 +117,7 @@ func CreateApiRoutes(app *fiber.App) {
 
 	//filesystem with s3
 	//fileApi := rest.Group("/file")
-	app.Get("file/:keyfile", api.HdlGetFileS3)
+	app.Get("file/static/:keyfile", api.HdlGetFileS3)
 	app.Post("file/upload", api.HdlPostFileS3)
 
 	//firma digital pdf hoja de servicio

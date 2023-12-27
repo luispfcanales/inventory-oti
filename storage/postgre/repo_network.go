@@ -47,6 +47,7 @@ func (db *dbConfig) SelectResumeNetworks() []models.ResumeNetworks {
 		SELECT campus.id as id_campus,campus.name as campus_name, dl.floor as number_floor,
 		nt.ip_address,
 		zone.name as zone_name,
+		dependency.id as id_dependency,
 		dependency.name as dependency_name,
 		network_connection.type_connection
 		FROM dependency_location dl
@@ -70,6 +71,7 @@ func (db *dbConfig) SelectResumeNetworks() []models.ResumeNetworks {
 			&r.NumberFloor,
 			&r.IpAddress,
 			&r.ZoneName,
+			&r.IDDependendy,
 			&r.DependendyName,
 			&r.TypeConnection,
 		)

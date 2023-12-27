@@ -17,6 +17,7 @@ type ResumeNetworks struct {
 	NumberFloor    int    `json:"number_floor,omitempty"`
 	IpAddress      string `json:"ip_address,omitempty"`
 	ZoneName       string `json:"zone_name,omitempty"`
+	IDDependendy   string `json:"id_dependendy,omitempty"`
 	DependendyName string `json:"dependendy_name,omitempty"`
 	TypeConnection string `json:"type_connection,omitempty"`
 }

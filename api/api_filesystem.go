@@ -18,11 +18,11 @@ var (
 
 func HdlGetFileS3(c *fiber.Ctx) error {
 
-	//keyfile := c.Params("keyfile")
+	keyfile := c.Params("keyfile")
 	fullpath := fmt.Sprintf(
 		"%s/%s",
-		directoryServiceSheet,
-		"diagrama_modificado.png",
+		directoryHelper,
+		keyfile,
 	)
 
 	return c.SendFile(fullpath)
