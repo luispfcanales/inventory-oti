@@ -1,6 +1,6 @@
 module github.com/luispfcanales/inventory-oti
 
-go 1.21.5
+go 1.17
 
 require (
 	github.com/deta/deta-go v1.0.0
