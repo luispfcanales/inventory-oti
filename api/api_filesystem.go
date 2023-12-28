@@ -50,7 +50,7 @@ func HdlPostFileS3(indexDir uint) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 
-		files := form.File["file"]
+		files := form.File["load_file"]
 
 		for _, file := range files {
 			src, err := file.Open()
@@ -100,6 +100,7 @@ func HdlReturnArgsToFirmPDF(c *fiber.Ctx) error {
 
 	reniec := make(map[string]string)
 
+	log.Println(opts)
 	reniec["app"] = "pdf"
 	reniec["clientId"] = "ZIzAvpCQernywPNktelaHQH0yi0"
 	reniec["clientSecret"] = "B6jWcQmOjJkD94A-EgTl"
