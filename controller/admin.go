@@ -17,3 +17,6 @@ func PageAdminOnlineComputers(c *fiber.Ctx) error {
 func PageAdminUserSystem(c *fiber.Ctx) error {
 	return c.Render("page_admin_users", services.GetInstanceSession(c).ID())
 }
+func PageFirmSheet(c *fiber.Ctx) error {
+	return c.Render("firmadigital", nil)
+}

@@ -43,7 +43,7 @@ func (db *dbConfig) getConnection() *sql.DB {
 }
 
 func loadEnv(db *dbConfig) {
-	db.host = "18.219.214.89"
+	db.host = "localhost"
 	db.user = "postgres"
 	db.password = "luis"
 	db.dbname = "oti"

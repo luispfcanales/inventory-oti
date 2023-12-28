@@ -124,6 +124,7 @@ func CreateApiRoutes(app *fiber.App) {
 
 	//firma digital pdf hoja de servicio
 	app.Get("/pdf", api.PreviewPDF(PDF_SRV))
+	app.Get("/firm", controller.PageFirmSheet)
 
 	rest.Get("/dni/:dni", api.GetDataDni(API_DNI_SRV))
 }
