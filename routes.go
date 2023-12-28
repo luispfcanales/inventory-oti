@@ -68,7 +68,6 @@ func init() {
 func ConfigRoutes(app *fiber.App) {
 	app.Static("/public", "public")
 
-	//RegisterRoutesController(app)
 	CreateWebsockets(app)
 	CreateApiRoutes(app)
 }
@@ -119,12 +118,13 @@ func CreateApiRoutes(app *fiber.App) {
 
 	//filesystem with s3
 	//fileApi := rest.Group("/file")
-	app.Get("file/static/:keyfile", api.HdlGetFileS3)
-	app.Post("file/upload", api.HdlPostFileS3)
+	app.Get("file/img/ticket/:keyfile", api.HdlGetFileS3(2))
+	app.Post("file/img/ticket/upload", api.HdlPostFileS3(2))
 
 	//firma digital pdf hoja de servicio
-	app.Get("/pdf", api.PreviewPDF(PDF_SRV))
+	app.Get("/preview/pdf", api.PreviewPDF(PDF_SRV))
 	app.Get("/firm", controller.PageFirmSheet)
+	app.Post("/firm/args", api.HdlReturnArgsToFirmPDF)
 
 	rest.Get("/dni/:dni", api.GetDataDni(API_DNI_SRV))
 }

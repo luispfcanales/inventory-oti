@@ -6,7 +6,7 @@ import "github.com/luispfcanales/inventory-oti/models"
 type StoragePersonService interface {
 	DeletePerson(dni int) bool
 	InsertPerson(models.Person) (models.Person, error)
-	SelectPerson(dni int) (models.Person, error)
+	SelectPerson(dni string) (models.Person, error)
 	SelectPersons() []models.Person
 	UpdatePerson(models.Person) (models.Person, error)
 }
@@ -15,7 +15,7 @@ type StoragePersonService interface {
 type PersonService interface {
 	RemovePerson(int) bool
 	SavePerson(models.Person) (models.Person, error)
-	ListOne(int) (models.Person, error)
+	ListOne(string) (models.Person, error)
 	ListAll() []models.Person
 	Put(models.Person) (models.Person, error)
 }

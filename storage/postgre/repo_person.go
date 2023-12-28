@@ -43,7 +43,7 @@ func (db *dbConfig) InsertPerson(p models.Person) (models.Person, error) {
 	return p, nil
 }
 
-func (db *dbConfig) SelectPerson(dni int) (models.Person, error) {
+func (db *dbConfig) SelectPerson(dni string) (models.Person, error) {
 	var p models.Person
 
 	stmt, err := db.getConnection().Prepare(`

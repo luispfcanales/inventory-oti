@@ -28,7 +28,7 @@ func (personsrv *PersonSrv) SavePerson(p models.Person) (models.Person, error) {
 	return data, nil
 }
 
-func (personsrv *PersonSrv) ListOne(dni int) (models.Person, error) {
+func (personsrv *PersonSrv) ListOne(dni string) (models.Person, error) {
 	p, err := personsrv.repo.SelectPerson(dni)
 	if err != nil {
 		return p, err

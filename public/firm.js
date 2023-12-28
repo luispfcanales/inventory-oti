@@ -1,5 +1,5 @@
 //const fxHoja = document.getElementById("fxhoja")
-const fxcontent = document.getElementById("fxcontent")
+//const fxcontent = document.getElementById("fxcontent")
 const fxfirm = document.getElementById("fxfirm")
 let move = false
 
@@ -50,12 +50,13 @@ function get_relative(event) {
 
 //send button init firm event initInvoker
 function send_firm() {
-  initInvoker('W')
+  //initInvoker('W')
+  getArgsForEvent({})
 }
 
 //getArgsForEvent send request to api to get info base64
 const getArgsForEvent =async(payload)=>{
-  const rq = await fetch("http://localhost:4000/args",{
+  const rq = await fetch("/firm/args",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -63,15 +64,23 @@ const getArgsForEvent =async(payload)=>{
     body:JSON.stringify(payload),
   })
 
+  let position = $("#fxfirm").position()
+  console.log(position)
+  position.top = position.top * 0.75
+  position.left = position.left * 0.75
+  console.log(position)
   const body = await rq.json()
-  return body
-  //console.log(body)
+  //return body
+  console.log(body)
 }
 
 //events implement required
 window.addEventListener('getArguments',async(e)=>{
   type = e.detail;
   let position = $("#fxfirm").position()
+  position.top = position.top * 0.75
+  position.left = position.left * 0.75
+
   let payload = {
     file_id:"38be5475-6b48-4dd9-83fd-77f51dfdb97e",
     page_number:"0",
