@@ -43,7 +43,7 @@ func (db *dbConfig) SelectRole() ([]models.Role, error) {
 	rows, err := db.getConnection().Query(`
 		SELECT 
 		id,name
-		FROM roles
+		FROM role
 	`)
 	if err != nil {
 		log.Println(err)
