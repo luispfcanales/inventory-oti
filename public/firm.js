@@ -1,4 +1,3 @@
-//imported in main.js
 //const fxHoja = document.getElementById("fxhoja")
 const fxcontent = document.getElementById("fxcontent")
 const fxfirm = document.getElementById("fxfirm")
