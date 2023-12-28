@@ -69,9 +69,7 @@ func HdlGetPerson(personSrv ports.PersonService) fiber.Handler {
 			return res.NotFoundJSON()
 		}
 
-		v, _ := strconv.Atoi(dni)
-
-		p, err := personSrv.ListOne(v)
+		p, err := personSrv.ListOne(dni)
 		if err != nil {
 			return res.NotFoundJSON()
 		}
