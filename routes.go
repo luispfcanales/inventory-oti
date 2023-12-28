@@ -117,9 +117,13 @@ func CreateApiRoutes(app *fiber.App) {
 	rest.Get("/computers", api.GetComputers(CPU_SRV))
 
 	//filesystem with s3
-	//fileApi := rest.Group("/file")
+	//ticket files
 	app.Get("file/img/ticket/:keyfile", api.HdlGetFileS3(2))
 	app.Post("file/img/ticket/upload", api.HdlPostFileS3(2))
+	//serviceSheet
+	app.Get("file/sheet/:keyfile", api.HdlGetFileS3(0))
+	app.Post("file/sheet/upload", api.HdlPostFileS3(0))
+	app.Get("file/reniec/:keyfile", api.HdlGetFileReniecS3(0))
 
 	//firma digital pdf hoja de servicio
 	app.Get("/preview/pdf", api.PreviewPDF(PDF_SRV))

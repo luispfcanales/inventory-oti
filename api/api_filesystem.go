@@ -105,22 +105,22 @@ func HdlReturnArgsToFirmPDF(c *fiber.Ctx) error {
 	reniec["clientSecret"] = "B6jWcQmOjJkD94A-EgTl"
 	reniec["idFile"] = "load_file"
 	reniec["type"] = "W"
-	reniec["protocol"] = "T"                                                      //https: S - http: T
-	reniec["fileDownloadUrl"] = "http://localhost:4000/reniec/download"           //endpoint
-	reniec["fileDownloadLogoUrl"] = ""                                            //logo
-	reniec["fileDownloadStampUrl"] = "http://localhost:4000/public/logofirma.png" //stamp reniec logo - optional
-	reniec["fileUploadUrl"] = "http://localhost:4000/file/upload"                 //route to upload file and save
-	reniec["contentFile"] = opts.FileID + ".pdf"                                  //real name document - json struct
-	reniec["reason"] = opts.Reason                                                //json struct
-	reniec["pageNumber"] = opts.PageNumber                                        //json struct
-	reniec["posx"] = opts.Pox                                                     //json sctruct
-	reniec["posy"] = opts.Poy                                                     //json sctruct
+	reniec["protocol"] = "T"                                                               //https: S - http: T
+	reniec["fileDownloadUrl"] = "http://18.219.214.89/file/reniec/" + opts.FileID + ".pdf" //endpoint
+	reniec["fileDownloadLogoUrl"] = ""                                                     //logo
+	reniec["fileDownloadStampUrl"] = "http://18.219.214.89/public/logofirma.png"           //stamp reniec logo - optional
+	reniec["fileUploadUrl"] = "http://18.219.214.89/file/sheet/upload"                     //route to upload file and save
+	reniec["contentFile"] = opts.FileID + ".pdf"                                           //real name document - json struct
+	reniec["reason"] = opts.Reason                                                         //json struct
+	reniec["pageNumber"] = opts.PageNumber                                                 //json struct
+	reniec["posx"] = opts.Pox                                                              //json sctruct
+	reniec["posy"] = opts.Poy                                                              //json sctruct
 	reniec["isSignatureVisible"] = "true"
 	reniec["stampAppearanceId"] = opts.StampAppearanceID //json struct
 	reniec["fontSize"] = "7"
 	reniec["dcfilter"] = ".*FIR.*|.*FAU.*"
-	reniec["outputFile"] = "38be5475-6b48-4dd9-83fd-77f51dfdb97e[R].pdf" //json struct name file
-	reniec["maxFileSize"] = "41943040"                                   //40Mb
+	reniec["outputFile"] = opts.FileID + "[R].pdf" //json struct name file
+	reniec["maxFileSize"] = "41943040"             //40Mb
 	reniec["timestamp"] = "false"
 
 	b, err := json.Marshal(reniec)
@@ -134,4 +134,33 @@ func HdlReturnArgsToFirmPDF(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"args": ed,
 	})
+}
+
+func HdlGetFileReniecS3(indexDirectory uint) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		keyfile := c.Params("keyfile")
+		fullpath := fmt.Sprintf(
+			"%s/%s",
+			directory[indexDirectory],
+			keyfile,
+		)
+
+		fs, err := os.Open(fullpath)
+		if err != nil {
+			log.Println(err)
+			return c.Status(500).SendString("Error interno del servidor")
+		}
+		defer fs.Close()
+
+		c.Set("Content-Type", "application/octet-stream")
+		c.Set("Content-Disposition", "attachment; filename="+keyfile)
+
+		if err := c.SendStream(fs); err != nil {
+			log.Println(err)
+			return c.Status(500).SendString("Error interno del servidor")
+		}
+
+		return c.SendStatus(200)
+	}
 }

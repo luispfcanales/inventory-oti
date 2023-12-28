@@ -66,8 +66,8 @@ const getArgsForEvent =async(payload)=>{
 
   let position = $("#fxfirm").position()
   console.log(position)
-  position.top = position.top * 0.75
-  position.left = position.left * 0.75
+  position.top = position.top + 194
+  position.left = position.left + 98
   console.log(position)
   const body = await rq.json()
   //return body
@@ -78,8 +78,6 @@ const getArgsForEvent =async(payload)=>{
 window.addEventListener('getArguments',async(e)=>{
   type = e.detail;
   let position = $("#fxfirm").position()
-  position.top = position.top * 0.75
-  position.left = position.left * 0.75
 
   let payload = {
     file_id:"38be5475-6b48-4dd9-83fd-77f51dfdb97e",
