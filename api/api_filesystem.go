@@ -90,6 +90,8 @@ func getMimeType(file io.Reader) (string, error) {
 
 // HdlReturnArgsToFirmPDF return args base64 to send firm refirma invoker
 func HdlReturnArgsToFirmPDF(c *fiber.Ctx) error {
+	c.Set("Access-Control-Allow-Origin", "*")
+	c.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	res := models.NewResponseApi(c)
 
 	opts := models.OptionsSignature{}
